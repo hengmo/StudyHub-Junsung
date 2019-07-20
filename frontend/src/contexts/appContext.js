@@ -17,7 +17,7 @@ export default class AppContextProvider extends Component {
     // 현재 Login 상태에 대한 state
     // status : false -> 로그인 x
     // status : true -> 로그인 o
-    signInInfo: {
+    userInfo: {
       status: false,
       id: '',
       email: '',
@@ -198,44 +198,29 @@ export default class AppContextProvider extends Component {
     checkAuth: async () => {
       return apiClient
         .post('/users/checkAuth')
-        .then(res => ({ status: res.status, id: res.id, email: res.email, image: res.image, name: res.name, date: res.date }))
         .then(user => {
-          let io = this.state.socketConnection.io;
-          const signInStatus = user.status;
+          const loginStatus = user.status;
 
-          if (!signInStatus) {
-            localStorage.setItem('loginState', JSON.stringify(false));
-            this.setState({
-              ...this.state,
-              socketConnection: {
-                io: null,
-              },
-              signInInfo: {
-                status: user.status,
-                id: user.id,
-                email: user.email,
-                image: user.image,
-                name: user.name,
-                date: user.date,
-              },
-            });
-          } else {
+          if (loginStatus) {
+            console.log('새로 로그인을 하는경우');
             // 새로 로그인을 하는 경우
-            if (!this.state.signInInfo.status) {
-              io = socketIOClient('https://api.studyhub.xyz');
+            console.log(this.state.userInfo.status);
+            if (!this.state.userInfo.status) {
+              console.log('if');
+              const io = socketIOClient('https://api.studyhub.xyz');
               io.on('unseenMessage', data => {
-                if (data.recipient !== this.state.signInInfo.id) return;
-                console.log('only for' + this.state.signInInfo.email);
+                console.log('1');
+                if (data.recipient !== this.state.userInfo.id) return;
+                console.log('2');
+                console.log('only for' + this.state.userInfo.email);
                 this.actions.getUnseenMessage();
                 this.actions.snackbarOpenHandler('메시지가 도착했습니다.', 'info');
               });
 
-              localStorage.setItem('loginState', JSON.stringify(true));
-
               this.setState({
                 ...this.state,
                 socketConnection: { io: io },
-                signInInfo: {
+                userInfo: {
                   status: user.status,
                   id: user.id,
                   email: user.email,

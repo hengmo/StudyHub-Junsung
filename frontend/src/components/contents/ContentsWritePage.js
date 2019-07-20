@@ -110,7 +110,7 @@ class ContentsWritePage extends Component {
   addContents = async e => {
     e.preventDefault();
     const { title, selectedCategories: categories, description, selectedLocation: studyLocation } = this.state;
-    const { name: leader, email, image: profileImg } = this.context.state.signInInfo;
+    const { name: leader, email, image: profileImg } = this.context.state.userInfo;
     const coverImg = document.getElementById('coverImg').files[0];
 
     if(coverImg && coverImg.type !== 'image/png' && coverImg.type !== 'image/jpeg' && coverImg.type !== 'image/bmp')

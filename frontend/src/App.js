@@ -32,6 +32,7 @@ class App extends Component {
   };
 
   render() {
+    const loginStatus = this.props.state.userInfo.status;
     return (
       <>
         {this.props.state.loadingStatus ? (
@@ -40,7 +41,7 @@ class App extends Component {
             <CssBaseline />
             <CustomSnackbar />
             <Route exact path="/" component={Template} />
-            <PrivateRoute path="/write" component={ContentsWritePage} />
+            <PrivateRoute path="/write" loginStatus={loginStatus} component={ContentsWritePage} />
             <Route path="/contents" component={ContentsListController} />
             <Route path="/category/:id" component={CategoryListController} />
             <Route path="/category//" component={Error} />
@@ -49,8 +50,8 @@ class App extends Component {
             <Route path="/signup" component={SignUpPage} />
             <Route path="/signin" component={SignInPage} />
             <Route path="/loading" component={LoadingProgress} />
-            <PrivateRoute path="/mypage" component={MyPageController} />
-            <PrivateRoute path="/mymessagepage" component={MyMessagePage} />
+            <PrivateRoute path="/mypage" loginStatus={loginStatus} component={MyPageController} />
+            <PrivateRoute path="/mymessagepage" loginStatus={loginStatus} component={MyMessagePage} />
             <Footer />
           </div>
         ) : (

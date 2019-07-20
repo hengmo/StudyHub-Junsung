@@ -10,7 +10,7 @@ class DetailContentsController extends Component {
 
   state = {
     detailTerm: this.props.match.params.id,
-    signInInfo: {},
+    userInfo: {},
   };
 
   async componentDidMount() {
@@ -22,7 +22,7 @@ class DetailContentsController extends Component {
     this.setState({
       content,
       participants,
-      signInInfo: this.context.state.signInInfo,
+      userInfo: this.context.state.userInfo,
     });
 
     const map = new naver.maps.Map('naverMap', {
@@ -54,14 +54,14 @@ class DetailContentsController extends Component {
   };
 
   render() {
-    const { content, participants, signInInfo, } = this.state;
+    const { content, participants, userInfo, } = this.state;
     return (
       <div>
         {content ? (
           <DetailContentsViewPage
             content={content}
             participants={participants}
-            signInInfo={signInInfo}
+            userInfo={userInfo}
             joinStudy={this.joinStudy}
             deleteStudy={this.deleteStudy}
             leaveStudy={this.leaveStudy}

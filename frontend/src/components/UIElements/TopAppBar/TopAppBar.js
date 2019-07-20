@@ -35,7 +35,7 @@ class TopAppBar extends Component {
 
   render() {
     const { classes } = this.props;
-    const { status: loginStatus } = this.context.state.signInInfo;
+    const { status: loginStatus } = this.context.state.userInfo;
     
     return (
       <div className={classes.root}>

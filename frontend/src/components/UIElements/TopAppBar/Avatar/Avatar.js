@@ -70,7 +70,7 @@ class AvatarandDropdown extends React.Component {
   }
 
   getUnseenMessage(data){
-    if (data.recipient === this.context.state.signInInfo.id)
+    if (data.recipient === this.context.state.userInfo.id)
       this.context.actions.getUnseenMessage();
   };
 
@@ -96,7 +96,7 @@ class AvatarandDropdown extends React.Component {
           aria-haspopup="true"
           onClick={this.handleClick}
         >
-          <Avatar className = {classes.avatar} alt="Remy Sharp" src={`${apiUrl}/${this.context.state.signInInfo.image}`}/>
+          <Avatar className = {classes.avatar} alt="Remy Sharp" src={`${apiUrl}/${this.context.state.userInfo.image}`}/>
         </Button>
         <Menu
           id="simple-menu"

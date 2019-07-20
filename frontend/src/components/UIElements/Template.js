@@ -142,9 +142,7 @@ class Template extends Component {
   };
 
   openSnackbar = () => {
-    const {
-      signInInfo: { status: loginStatus },
-    } = this.context.state;
+    const { userInfo: { status: loginStatus }, } = this.context.state;
     if (!loginStatus) this.context.actions.snackbarOpenHandler('먼저 회원등록을 해주세요.', 'warning');
   };
 

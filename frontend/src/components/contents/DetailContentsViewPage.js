@@ -163,7 +163,7 @@ class DetailContentsViewPage extends Component {
 
   handleOpen = receiver => {
     const {
-      signInInfo: { status: loginStatus },
+      userInfo: { status: loginStatus },
     } = this.props;
     console.log(receiver);
     if (!loginStatus) {
@@ -176,7 +176,7 @@ class DetailContentsViewPage extends Component {
       classes,
       content,
       participants,
-      signInInfo: { status: loginStatus, email: loginedUserEmail },
+      userInfo: { status: loginStatus, email: loginedUserEmail },
       joinStudy,
       leaveStudy,
       deleteStudy,
@@ -378,7 +378,7 @@ DetailContentsViewPage.propTypes = {
   classes: propTypes.object.isRequired,
   content: propTypes.object.isRequired,
   participants: propTypes.array.isRequired,
-  signInInfo: propTypes.object.isRequired,
+  userInfo: propTypes.object.isRequired,
   joinStudy: propTypes.func.isRequired,
 };
 

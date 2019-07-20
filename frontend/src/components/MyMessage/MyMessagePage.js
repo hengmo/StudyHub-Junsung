@@ -137,7 +137,7 @@ class MyMessagePage extends Component {
   }
   // change stream 이벤트 핸들러(메세지가 왔을 때)
   getArrivalMessage(data) {
-    if (!this.context.state.signInInfo.status || this.context.state.signInInfo.id !== data.recipient) return true;
+    if (!this.context.state.userInfo.status || this.context.state.userInfo.id !== data.recipient) return true;
 
     this.getMessagesApi(this.state.messagePagerInfo, 'changeTotal', 1);
   }
@@ -205,7 +205,7 @@ class MyMessagePage extends Component {
 
   async componentDidMount() {
     this.context.actions.checkAuth().then(() => {
-      if (!this.context.state.signInInfo.status) return;
+      if (!this.context.state.userInfo.status) return;
       // 핸들러 등록
       this.context.state.socketConnection.io.on('getmessage', data => {
         this.getArrivalMessage(data);

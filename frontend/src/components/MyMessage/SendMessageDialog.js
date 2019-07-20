@@ -64,12 +64,12 @@ class SendMessageDialog extends Component {
         return;
       }
 
-    if (sendMessageTo.trim() === this.context.state.signInInfo.email){
+    if (sendMessageTo.trim() === this.context.state.userInfo.email){
       this.context.actions.snackbarOpenHandler("자기 자신에게 쪽지를 전송할 수 없습니다.",'warning');
       return;
     }
 
-    apiClient.post('/messages/send',{recipientEmail: sendMessageTo.trim(), messageTitle: messageTitle, messageBody: messageBody, senderId: this.context.state.signInInfo.id})
+    apiClient.post('/messages/send',{recipientEmail: sendMessageTo.trim(), messageTitle: messageTitle, messageBody: messageBody, senderId: this.context.state.userInfo.id})
     .then(res=> {
       this.context.actions.snackbarOpenHandler(res.message,res.state,{
         vertical: 'bottom',
