@@ -239,7 +239,16 @@ class DetailContentsViewPage extends Component {
               <div className={classes.simpleInformContainer}>
                 <div className={classes.informTextContainer}>
                   <Typography style={{ marginBottom: 13 }}>{new Date(content.createdAt).toLocaleDateString('ko-KR', options)}</Typography>
-                  <Typography variant="h4">{content.title}</Typography>
+                  <Typography variant="h4">
+                    {content.title.split(' ').map((text, index) => {
+                      return (
+                        <span>
+                          {`${text} `}
+                          {index === 3 && <br />}
+                        </span>
+                      )
+                    })}
+                    </Typography>
                 </div>
                 <div className={classes.leaderBtnContainer}>
                   <Typography style={{ marginRight: 15 }}>주최: {content.leader.name}</Typography>

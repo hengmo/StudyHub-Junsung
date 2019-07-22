@@ -113,32 +113,34 @@ class ContentsWritePage extends Component {
     const { name: leader, email, image: profileImg } = this.context.state.userInfo;
     const coverImg = document.getElementById('coverImg').files[0];
 
-    if(coverImg && coverImg.type !== 'image/png' && coverImg.type !== 'image/jpeg' && coverImg.type !== 'image/bmp')
+    if (title === '' || categories === '' || description === '' || studyLocation === '') {
+      return this.context.actions.snackbarOpenHandler('스터디 정보를 모두 작성 해주세요.', 'warning');
+    }
+    else if (categories.length === 0) {
+      return this.context.actions.snackbarOpenHandler('스터디 목적을 1개 이상 선택해주세요.', 'warning');
+    }
+    else if (coverImg && coverImg.type !== 'image/png' && coverImg.type !== 'image/jpeg' && coverImg.type !== 'image/bmp') {
       return this.context.actions.snackbarOpenHandler('이미지 파일 형식이 아닙니다.', 'warning');
-
-    if (title !== '' && categories !== '' && description !== '' && studyLocation !== '') {
-      const dataInObject = {
-        title,
-        categories,
-        description,
-        studyLocation,
-        coverImg,
-        leader,
-        email,
-        profileImg,
-      };
-
-      const formData = new FormData();
-      Object.keys(dataInObject).map(key => {
-        return formData.append(key, dataInObject[key]);
-      });
-
-      await this.context.actions.addContents(formData);
-      this.props.history.push('/');
     }
-    else {
-      this.context.actions.snackbarOpenHandler('스터디 정보를 모두 작성 해주세요.', 'warning');
-    }
+
+    const dataInObject = {
+      title,
+      categories,
+      description,
+      studyLocation,
+      coverImg,
+      leader,
+      email,
+      profileImg,
+    };
+
+    const formData = new FormData();
+    Object.keys(dataInObject).map(key => {
+      return formData.append(key, dataInObject[key]);
+    });
+
+    await this.context.actions.addContents(formData);
+    this.props.history.push('/');
   };
 
   async componentDidMount() {
@@ -194,7 +196,8 @@ class ContentsWritePage extends Component {
               />
             </div>
             <div className={classes.inputContainer}>
-              <Typography className={classes.inputText}>스터디 목적</Typography>
+              <Typography className={classes.inputText} component={'span'}>스터디 목적<Typography style={{ fontSize: 16, }}>(복수 선택 가능)</Typography></Typography>
+              
               <FormGroup row className={classes.categoryGroup}>
                 {categories.map(category => {
                   return (

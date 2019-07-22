@@ -199,38 +199,26 @@ export default class AppContextProvider extends Component {
       return apiClient
         .post('/users/checkAuth')
         .then(user => {
-          const loginStatus = user.status;
+          const io = socketIOClient('https://api.studyhub.xyz');
+          io.on('unseenMessage', data => {
+            if (data.recipient !== this.state.userInfo.id) return;
+            console.log('only for' + this.state.userInfo.email);
+            this.actions.getUnseenMessage();
+            this.actions.snackbarOpenHandler('메시지가 도착했습니다.', 'info');
+          });
 
-          if (loginStatus) {
-            console.log('새로 로그인을 하는경우');
-            // 새로 로그인을 하는 경우
-            console.log(this.state.userInfo.status);
-            if (!this.state.userInfo.status) {
-              console.log('if');
-              const io = socketIOClient('https://api.studyhub.xyz');
-              io.on('unseenMessage', data => {
-                console.log('1');
-                if (data.recipient !== this.state.userInfo.id) return;
-                console.log('2');
-                console.log('only for' + this.state.userInfo.email);
-                this.actions.getUnseenMessage();
-                this.actions.snackbarOpenHandler('메시지가 도착했습니다.', 'info');
-              });
-
-              this.setState({
-                ...this.state,
-                socketConnection: { io: io },
-                userInfo: {
-                  status: user.status,
-                  id: user.id,
-                  email: user.email,
-                  image: user.image,
-                  name: user.name,
-                  date: user.date,
-                },
-              });
-            }
-          }
+          this.setState({
+            ...this.state,
+            socketConnection: { io: io },
+            userInfo: {
+              status: user.status,
+              id: user.id,
+              email: user.email,
+              image: user.image,
+              name: user.name,
+              date: user.date,
+            },
+          });
         })
         .catch(err => console.log(err));
     },

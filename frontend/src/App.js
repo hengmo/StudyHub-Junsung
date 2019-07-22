@@ -8,7 +8,7 @@ import SignUpPage from './components/UserPages/SignUpPage';
 import SignInPage from './components/UserPages/SignInPage';
 import MyMessagePage from './components/MyMessage/MyMessagePage';
 import MyPageController from './components/MyPage/MyPageController';
-import Template from './components/UIElements/Template';
+import TemplateController from './components/UIElements/TemplateController';
 import TopAppBar from './components/UIElements/TopAppBar/TopAppBar';
 import ContentsWritePage from './components/Contents/ContentsWritePage';
 import ContentsListController from './components/Contents/ContentsListController';
@@ -40,7 +40,7 @@ class App extends Component {
             <TopAppBar />
             <CssBaseline />
             <CustomSnackbar />
-            <Route exact path="/" component={Template} />
+            <Route exact path="/" component={TemplateController} />
             <PrivateRoute path="/write" loginStatus={loginStatus} component={ContentsWritePage} />
             <Route path="/contents" component={ContentsListController} />
             <Route path="/category/:id" component={CategoryListController} />

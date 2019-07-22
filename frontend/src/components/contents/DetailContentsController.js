@@ -14,6 +14,7 @@ class DetailContentsController extends Component {
   };
 
   async componentDidMount() {
+    window.scrollTo(0, 0);
     const { detailTerm } = this.state;
     const content = await this.context.actions.getContentsDetail(detailTerm);
     const location = await this.context.actions.getLatLngByAddress(content.studyLocation);
