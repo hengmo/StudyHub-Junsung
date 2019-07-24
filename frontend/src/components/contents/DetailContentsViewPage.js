@@ -14,13 +14,12 @@ import {
   Avatar,
   Grid,
   Menu,
-  MenuItem,
   Snackbar,
 } from '@material-ui/core';
 import SendMessageDialog from '../MyMessage/SendMessageDialog';
 import { AppContext } from '../../contexts/appContext';
 import classNames from 'classnames';
-import { Group, Place, Update, Category } from '@material-ui/icons';
+import { Group, Place, Update, Category, Message } from '@material-ui/icons';
 import { apiUrl } from '../../helpers/apiClient';
 
 const style = theme => ({
@@ -82,6 +81,10 @@ const style = theme => ({
   button: {
     width: 150,
     margin: 2,
+  },
+  messageButton: {
+    top: -86,
+    left: 47,
   },
   mainContainer: {
     display: 'flex',
@@ -156,19 +159,29 @@ class DetailContentsViewPage extends Component {
   };
 
   handleClose = () => {
-    this.setState({ ...this.state, sendMessageTo: '', messageSendDialogOpen: false, anchorEl: null, anchorParticipantsEl: null }, () =>
+    this.setState({ 
+      ...this.state, 
+      sendMessageTo: '', 
+      messageSendDialogOpen: false, 
+      anchorEl: null, 
+      anchorParticipantsEl: null 
+    }, () => 
       this.sendMessageDialog.setToInitialState(),
     );
   };
 
   handleOpen = receiver => {
-    const {
-      userInfo: { status: loginStatus },
-    } = this.props;
+    const { userInfo: { status: loginStatus }, } = this.props;
     console.log(receiver);
     if (!loginStatus) {
-      this.context.actions.snackbarOpenHandler('먼저 로그인 해주세요.', 'warning');
-    } else this.setState({ ...this.state, sendMessageTo: receiver, messageSendDialogOpen: true }, this.sendMessageDialog.setToInitialState(receiver));
+      return this.context.actions.snackbarOpenHandler('먼저 로그인 해주세요.', 'warning');
+    } else {
+      this.setState({ 
+        ...this.state, 
+        sendMessageTo: receiver, 
+        messageSendDialogOpen: true 
+      });
+    }
   };
 
   userRendering = () => {
@@ -222,7 +235,7 @@ class DetailContentsViewPage extends Component {
 
   render() {
     const { classes, content, participants } = this.props;
-    const { anchorEl, anchorParticipantsEl, messageSendDialogOpen, sendMessageTo, snackbarOpen } = this.state;
+    const { anchorParticipantsEl, messageSendDialogOpen, sendMessageTo, snackbarOpen } = this.state;
     const options = {
       weekday: 'long',
       year: 'numeric',
@@ -242,7 +255,7 @@ class DetailContentsViewPage extends Component {
                   <Typography variant="h4">
                     {content.title.split(' ').map((text, index) => {
                       return (
-                        <span>
+                        <span key={text}>
                           {`${text} `}
                           {index === 3 && <br />}
                         </span>
@@ -288,12 +301,10 @@ class DetailContentsViewPage extends Component {
                   <Grid container spacing={16}>
                     <Grid item sm={6} md={4} lg={3}>
                       <Card className={classes.card}>
-                        <Button aria-owns={anchorEl ? 'leader-menus' : undefined} aria-haspopup="true" onClick={this.leaderMenuOpen}>
-                          <Avatar style={{ width: 73, height: 73, marginTop: 12 }} src={`${apiUrl}/${content.leader.profileImg}`} />
+                        <Avatar style={{ width: 73, height: 73, marginTop: 12 }} src={`${apiUrl}/${content.leader.profileImg}`} />
+                        <Button className={classes.messageButton}>
+                          <Message onClick={() => this.handleOpen(content.leader.email)} />
                         </Button>
-                        <Menu id="leader-menus" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
-                          <MenuItem onClick={() => this.handleOpen(content.leader.email)}>쪽지 보내기</MenuItem>
-                        </Menu>
                         <CardContent style={{ textAlign: 'center' }}>
                           <Typography gutterBottom fontWeight="fontWeightMedium">
                             {content.leader.name}
@@ -319,7 +330,7 @@ class DetailContentsViewPage extends Component {
                             open={Boolean(anchorParticipantsEl)}
                             onClose={this.handleClose}
                           >
-                            <MenuItem onClick={() => this.handleOpen(user.email)}>쪽지 보내기</MenuItem>
+                            <Message onClick={() => this.handleOpen(user.email)}>쪽지 보내기</Message>
                           </Menu>
                           <CardContent style={{ textAlign: 'center' }}>
                             <Typography gutterBottom fontWeight="fontWeightMedium">
@@ -372,7 +383,7 @@ class DetailContentsViewPage extends Component {
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           open={snackbarOpen}
-          onClose={() => this.handleClose('snackbar')}
+          onClose={() => this.handleClose()}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}

@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography, } from '@material-ui/core';
+import { withStyles, Card, CardContent, CardMedia, Grid, Typography, CardActionArea, } from '@material-ui/core';
+import Dotdotdot from 'react-dotdotdot'
 import { apiUrl } from '../../helpers/apiClient';
 
 const styles = theme => ({
@@ -39,25 +40,31 @@ const ContentsListViewPage = props => {
       <div className={classNames(classes.layout, classes.cardGrid)}>
         <Grid container spacing={40}>
           {contents.map(content => (
-            <Grid item key={content.title} sm={6} md={4} lg={3}>
-              <Card className={classes.card}>
-                <CardMedia className={classes.cardMedia} image={`${apiUrl}/${content.imageUrl}`} title="Image title" />
-                <CardContent className={classes.cardContent}>
-                  <Typography variant="h5" component="h2">
-                    {content.title}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Link to={`/detail/${content.id}`} style={{ textDecoration: 'none', }}>
-                    <Button
-                      size="small"
-                      color="primary"
-                    >
-                      자세히보기
-                    </Button>
+            <Grid item sm={6} md={4} lg={3} key={content.id}>
+              <CardActionArea className={classes.actionArea} key={content.id}>
+                <Card className={classes.card}>
+                  <Link to={`/detail/${content.id}`} style={{ textDecoration: 'none' }}>
+                    <CardMedia className={classes.cardMedia} image={`${apiUrl}/${content.imageUrl}`} title="Image title" />
+                    <CardContent className={classes.cardContent}>
+                      <Typography component={'span'} style={{ fontSize: 24,}}>
+                        <Dotdotdot clamp={2}>
+                          {`${content.title}`.split(' ').map((text, index) => {
+                            return (
+                              <span key={text}>
+                                {`${text} `}
+                                {index === 1 && <br />}
+                              </span>
+                            )
+                          })}
+                        </Dotdotdot>
+                      </Typography>
+                    </CardContent>
                   </Link>
-                </CardActions>
-              </Card>
+                  <Typography style={{ paddingLeft: 16, paddingBottom: 8, }}>
+                    {content.categories[0]}
+                  </Typography>
+                </Card>
+              </CardActionArea>
             </Grid>
           ))}
         </Grid>

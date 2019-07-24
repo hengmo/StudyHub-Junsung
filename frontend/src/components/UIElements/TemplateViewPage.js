@@ -3,11 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import movie from '../../images/main-video.mp4';
 import classNames from 'classnames';
-import {
-  Button,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Button, Typography, withStyles, } from '@material-ui/core';
 import LoadingProgress from '../UIElements/LoadingProgress';
 import ContentsCarousel from './ContentsCarousel';
 
@@ -42,10 +38,40 @@ const styles = theme => ({
       marginBottom: -500,
     },
   },
+  categoryContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: 120,
+    borderBottom: '1.5px solid #e0e0e0',
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    height: 'auto',
+    width: '44%',
+  },
+  studyTextContainer: {
+    marginTop: 26,
+    marginBottom: 5,
+  },
+  textContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  mainText: {
+    flexGrow: 1,
+    fontSize: 20,
+    fontWeight: 600,
+  },
   rightIcon: {
     marginLeft: theme.spacing.unit,
   },
   button: {
+    fontSize: 15,
     margin: theme.spacing.unit,
   },
   layout: {
@@ -64,7 +90,8 @@ const styles = theme => ({
 });
 
 const TemplateViewPage = props => {
-  const { classes, contents, contentsByDistance, loadingCompleted, lat, lng, loginStatus } = props;
+  const { classes, contentsLatest, contentsByDistance, loadingCompleted, lat, lng, loginStatus } = props;
+  const categories = ['영어', '일본어', '중국어', '회화', '취업준비', '면접', '자기소개서', '프로젝트', '코딩 테스트', '전공', '인적성&NCS'];
   return (
     <>
       {loadingCompleted ? (
@@ -116,13 +143,31 @@ const TemplateViewPage = props => {
             </div>
           </div>
           <div className={classes.mainContainer}>
-            <div className={classNames(classes.layout, classes.cardGrid)}>
-              <Typography>지금 모집중인 스터디</Typography>
-              <ContentsCarousel contents={contents}/>
+            <div className={classes.categoryContainer}>
+              <div className={classes.buttonContainer}>
+                {categories.map(category => {
+                  return (
+                    <Link style={{ textDecoration: 'none' }} to={`/category/${category}`} key={category}>
+                      <Button variant="outlined" className={classes.button} value={category}>
+                        {category}
+                      </Button>
+                    </Link>
+                  )
+                })}
+              </div>
             </div>
             <div className={classNames(classes.layout, classes.cardGrid)}>
-              <Typography>내 주변 스터디</Typography>
-              <ContentsCarousel contents={contentsByDistance}/>
+              <div className={classes.studyTextContainer}>
+                <div className={classes.textContainer}>
+                  <span className={classes.mainText}>지금 모집중인 스터디</span>
+                  <Button style={{ fontSize: 16, height: 'fit-content', }} component={Link} to="/contents" color="primary">전체보기</Button>
+                </div>
+              </div>
+              <ContentsCarousel contents={contentsLatest} />
+              <div className={classes.studyTextContainer}>
+                <Typography className={classes.mainText}>내 주변 스터디</Typography>
+              </div>
+              <ContentsCarousel contents={contentsByDistance} />
             </div>
           </div>
         </Fragment>
@@ -135,10 +180,8 @@ const TemplateViewPage = props => {
 
 TemplateViewPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  contents: PropTypes.array.isRequired,
   contentsLatest: PropTypes.array.isRequired,
   contentsByDistance: PropTypes.array.isRequired,
-  contentsByViews: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
   loadingCompleted: PropTypes.bool.isRequired,
   lat: PropTypes.number.isRequired,

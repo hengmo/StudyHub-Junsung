@@ -110,16 +110,6 @@ router.delete('/delete/:id', (req, res, next) => {
   })
 });
 
-router.get('/representation1', (req, res, next) => { 
-  Contents.find((err, contents) => {
-    if (err) return next(err);
-    //console.log(res);
-    res.json(contents);
-  }).sort({views : -1})   
-    .where('categories').in(['면접'])
-    .limit(4);
-});
-
 //조회순 스터디
 router.get('/views', (req, res, next) => {
   Contents.find((err, contents) => {
@@ -128,7 +118,6 @@ router.get('/views', (req, res, next) => {
     res.json(contents);
   })
   .sort({views : -1})
-  .limit(4);
 });
 
 router.get('/latest', (req, res, next) => {
@@ -138,7 +127,6 @@ router.get('/latest', (req, res, next) => {
     res.json(contents);
   })
   .sort({id : -1})
-  .limit(4);
 });
 
 router.get('/context/:id', (req, res, next) => { 

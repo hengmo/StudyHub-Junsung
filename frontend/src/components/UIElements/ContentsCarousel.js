@@ -68,7 +68,7 @@ class ContentsCarousel extends Component {
         leftChevron={<Avatar style={{ background: '#90CAF9' }}><ArrowBack /></Avatar>}
         outsideChevron={false}
       >
-        {contents.filter((content, index) => index <= 8).map((content, index) => (
+        {contents.filter((content, index) => index < 12).map((content, index) => (
           <CardActionArea className={classes.actionArea} key={content.id}>
             <Card className={classes.card}>
               <Link to={`/detail/${content.id}`} style={{ textDecoration: 'none' }}>

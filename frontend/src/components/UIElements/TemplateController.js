@@ -11,10 +11,8 @@ class TemplateController extends Component {
 
     this.state = {
       users: [],
-      contents: [],
       contentsByDistance: [],
       contentsLatest: [],
-      contentsByViews: [],
       searchTerm: '',
       values: 0,
       categories: ['영어', '일본어', '중국어', '회화', '취업준비', '면접', '자기소개서', '프로젝트', '코딩 테스트', '전공', '인적성&NCS'],
@@ -35,8 +33,8 @@ class TemplateController extends Component {
       .slice(0, 2)
       .join(' ');
 
-    const contents = await this.context.actions.getContentsList();
-    const contentsByDistance = contents.filter(
+    const contentsLatest = await this.context.actions.getContentsLatest();
+    const contentsByDistance = contentsLatest.filter(
       content =>
         content.studyLocation
           .split(' ')
@@ -45,10 +43,8 @@ class TemplateController extends Component {
     );
 
     this.setState({
-      contents: contents,
-      contentsLatest: await this.context.actions.getContentsLatest(), // 최신순
+      contentsLatest: contentsLatest, // 최신순
       contentsByDistance: contentsByDistance, //거리순
-      contentsByViews: await this.context.actions.getContentsByViews(), // 조회순
       loadingCompleted: true,
     });
   }
@@ -63,7 +59,7 @@ class TemplateController extends Component {
   };
 
   render() {
-    const { contents, contentsLatest, contentsByDistance, contentsByViews, categories, loadingCompleted } = this.state;
+    const { contentsLatest, contentsByDistance, categories, loadingCompleted } = this.state;
     const {
       lat,
       lng,
@@ -73,10 +69,8 @@ class TemplateController extends Component {
     return (
       <>
         <TemplateViewPage
-          contents={contents}
           contentsLatest={contentsLatest}
           contentsByDistance={contentsByDistance}
-          contentsByViews={contentsByViews}
           categories={categories}
           loadingCompleted={loadingCompleted}
           lat={lat}

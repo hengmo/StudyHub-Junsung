@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -12,27 +12,27 @@ import Slide from '@material-ui/core/Slide';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import { AppContext } from '../../contexts/appContext';
-
 import apiClient from '../../helpers/apiClient';
 
 const styles = {
   appBar: {
     position: 'relative',
+    paddingRight: 0,
   },
 
   flex: {
     flex: 1,
   },
 
-  dialogBody:{
+  dialogBody: {
     margin: '20px 15px',
     width: 'calc(100% - 30px)',
   },
 
-  dialogTextField:{
+  dialogTextField: {
     margin: '8px',
-    width: 'calc(100% - 16px)'
-  }
+    width: 'calc(100% - 16px)',
+  },
 };
 
 function Transition(props) {
@@ -42,7 +42,7 @@ function Transition(props) {
 class SendMessageDialog extends Component {
   static contextType = AppContext;
 
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -56,39 +56,52 @@ class SendMessageDialog extends Component {
     this.handleTextFieldOnBlur = this.handleTextFieldOnBlur.bind(this);
   }
 
-  sendMessage(){
-    const {sendMessageTo, messageTitle, messageBody} = this.state;
-    if (sendMessageTo === null || messageTitle === null || messageBody === null || 
-      sendMessageTo === '' || messageTitle === '' || messageBody === ''){
-        this.context.actions.snackbarOpenHandler("공란이 있을 수 없습니다.",'warning');
-        return;
-      }
-
-    if (sendMessageTo.trim() === this.context.state.userInfo.email){
-      this.context.actions.snackbarOpenHandler("자기 자신에게 쪽지를 전송할 수 없습니다.",'warning');
+  sendMessage() {
+    const { sendMessageTo, messageTitle, messageBody } = this.state;
+    if (
+      sendMessageTo === null ||
+      messageTitle === null ||
+      messageBody === null ||
+      sendMessageTo === '' ||
+      messageTitle === '' ||
+      messageBody === ''
+    ) {
+      this.context.actions.snackbarOpenHandler('공란이 있을 수 없습니다.', 'warning');
       return;
     }
 
-    apiClient.post('/messages/send',{recipientEmail: sendMessageTo.trim(), messageTitle: messageTitle, messageBody: messageBody, senderId: this.context.state.userInfo.id})
-    .then(res=> {
-      this.context.actions.snackbarOpenHandler(res.message,res.state,{
-        vertical: 'bottom',
-        horizontal: 'left',});
-      if (res.state === 'success')
-        this.props.handleClose('messageSendDialog');
- 
-    })
-    .catch(err => {console.log(err)});
+    if (sendMessageTo.trim() === this.context.state.userInfo.email) {
+      this.context.actions.snackbarOpenHandler('자기 자신에게 쪽지를 전송할 수 없습니다.', 'warning');
+      return;
+    }
+
+    apiClient
+      .post('/messages/send', {
+        recipientEmail: sendMessageTo.trim(),
+        messageTitle: messageTitle,
+        messageBody: messageBody,
+        senderId: this.context.state.userInfo.id,
+      })
+      .then(res => {
+        this.context.actions.snackbarOpenHandler(res.message, res.state, {
+          vertical: 'bottom',
+          horizontal: 'left',
+        });
+        if (res.state === 'success') this.props.handleClose('messageSendDialog');
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
-  handleTextFieldOnBlur(e){
+  handleTextFieldOnBlur(e) {
     this.setState({
       ...this.state,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
-  setToInitialState(to = null){
+  setToInitialState(to = null) {
     this.setState({
       ...this.state,
       messageTitle: null,
@@ -98,52 +111,46 @@ class SendMessageDialog extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, initialRecipientEmail } = this.props;
 
     return (
-        <Dialog
-          open={this.props.open}
-          onClose={()=> this.props.handleClose()}
-          TransitionComponent={Transition}
-        >
-          <AppBar className={classes.appBar}>
-            <Toolbar>
-              <IconButton color="inherit" onClick={()=> this.props.handleClose()} aria-label="Close">
-                <CloseIcon />
-              </IconButton>
-              <Typography variant="h6" color="inherit" className={classes.flex}>
-                쪽지 작성
-              </Typography>
-              <Button color="inherit" onClick={()=> this.props.handleClose()}>
-                확인
-              </Button>
-            </Toolbar>
-          </AppBar>
-          <div className = {classes.dialogBody}>
-          
-          <TextField
-            id="outlined-full-width"
-            label="받는 사람"
-            name = 'sendMessageTo'
-            defaultValue = {this.props.initialRecipientEmail}
-            className = {classes.dialogTextField}
-            placeholder= "아이디(이메일)"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            autoFocus = {!Boolean(this.props.initialRecipientEmail)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onBlur={this.handleTextFieldOnBlur}
-          />
+      <Dialog open={this.props.open} onClose={() => this.props.handleClose()} TransitionComponent={Transition}>
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <Typography variant="h6" color="inherit" className={classes.flex}>
+              쪽지 작성
+            </Typography>
+            <IconButton color="inherit" onClick={() => this.props.handleClose()} aria-label="Close">
+              <CloseIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <div className={classes.dialogBody}>
+          {initialRecipientEmail === '' && (
+            <TextField
+              id="outlined-full-width"
+              label="받는 사람"
+              name="sendMessageTo"
+              defaultValue={initialRecipientEmail}
+              className={classes.dialogTextField}
+              placeholder="아이디(이메일)"
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              autoFocus={!Boolean(initialRecipientEmail)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onBlur={this.handleTextFieldOnBlur}
+            />
+          )}
 
           <TextField
             id="outlined-full-width"
             label="제목"
-            name = 'messageTitle'
-            autoFocus = {Boolean(this.props.initialRecipientEmail)}
-            className = {classes.dialogTextField}
+            name="messageTitle"
+            autoFocus={Boolean(initialRecipientEmail)}
+            className={classes.dialogTextField}
             placeholder="내용"
             fullWidth
             margin="normal"
@@ -157,10 +164,10 @@ class SendMessageDialog extends Component {
           <TextField
             id="outlined-full-width"
             label="내용"
-            name = 'messageBody'
+            name="messageBody"
             multiline
             rows="12"
-            className = {classes.dialogTextField}
+            className={classes.dialogTextField}
             placeholder="내용"
             fullWidth
             margin="normal"
@@ -169,15 +176,13 @@ class SendMessageDialog extends Component {
               shrink: true,
             }}
             onBlur={this.handleTextFieldOnBlur}
-        />
+          />
 
-        <DialogActions>
-            <Button onClick = {this.sendMessage} color="primary">
-              전송
-            </Button>
+          <DialogActions>
+            <Button onClick={this.sendMessage}>전송</Button>
           </DialogActions>
         </div>
-        </Dialog>
+      </Dialog>
     );
   }
 }

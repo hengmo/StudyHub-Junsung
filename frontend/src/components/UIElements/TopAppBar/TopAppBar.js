@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles, AppBar, Toolbar, Button, InputLabel, FormControl, Select, OutlinedInput, MenuItem, } from '@material-ui/core';
+import { withStyles, AppBar, Toolbar, Button, } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import Avatar from './Avatar/Avatar';
 import { AppContext } from '../../../contexts/appContext';
@@ -43,7 +43,6 @@ class TopAppBar extends Component {
 
   render() {
     const { classes, } = this.props;
-    const { categories, } = this.state;
     const { status: loginStatus } = this.context.state.userInfo;
 
     return (
@@ -55,34 +54,6 @@ class TopAppBar extends Component {
                 STUDYHUB
               </Link>
             </div>
-            <FormControl style={{ width: '25vh' }} variant="outlined" className={classes.formControl}>
-              <InputLabel
-                ref={ref => {
-                  this.InputLabelRef = ref;
-                }}
-                htmlFor="outlined-age-simple"
-              >
-                Category
-              </InputLabel>
-              <Select
-                value={this.state.searchTerm}
-                onChange={this.handleChange}
-                input={<OutlinedInput name="category" id="category-select" labelWidth={0} />}
-              >
-                {categories.map(category => {
-                  return (
-                    <MenuItem key={category} value={category}>
-                      {category}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-            <Link style={{ textDecoration: 'none' }} to={`/category/` + this.state.searchTerm}>
-              <Button style={{ height: '4.7vh' }} variant="contained" color="primary" className={classes.button}>
-                검색
-              </Button>
-            </Link>
             <Button className={classes.button} component={Link} to="/contents" style={{ color: '#FFFFFF' }}>
               스터디 찾기
             </Button>
