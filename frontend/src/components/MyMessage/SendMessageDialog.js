@@ -70,6 +70,7 @@ class SendMessageDialog extends Component {
   }
 
   setToInitialState = (to = null) =>{
+    console.log('setToInitial State');
     this.setState({
       ...this.state,
       messageTitle: null,

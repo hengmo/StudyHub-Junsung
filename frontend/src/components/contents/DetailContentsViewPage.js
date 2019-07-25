@@ -166,6 +166,7 @@ class DetailContentsViewPage extends Component {
   };
 
   handleClose = () => {
+    console.log('handle Close');
     this.setState({ ...this.state, sendMessageTo: '', messageSendDialogOpen: false, anchorEl: null, anchorParticipantsEle: null }, () => this.sendMessageDialog.setToInitialState(),);
   };
 
@@ -226,29 +227,6 @@ class DetailContentsViewPage extends Component {
     );
   };
 
-  componentWillUnmount() {
-    clearTimeout(this.timer);
-  };
-
-  handleButtonClick = () => {
-    if (!this.state.loading) {
-      this.setState(
-        {
-          success: false,
-          loading: true,
-        },
-        () => {
-          this.timer = setTimeout(() => {
-            this.setState({
-              loading: false,
-              success: true,
-            });
-          }, 2000);
-        },
-      );
-    }
-  };
-
   render() {
     const { classes, content, participants } = this.props;
     const { anchorEl, anchorParticipantsEle, messageSendDialogOpen, sendMessageTo, snackbarOpen } = this.state;
@@ -271,7 +249,7 @@ class DetailContentsViewPage extends Component {
                   <Typography variant="h4">
                     {content.title.split(' ').map((text, index) => {
                       return (
-                        <span key={text}>
+                        <span key={index}>
                           {`${text} `}
                           {index === 2 && <br />}
                         </span>

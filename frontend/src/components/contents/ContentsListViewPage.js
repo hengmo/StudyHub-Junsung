@@ -29,6 +29,7 @@ const styles = theme => ({
     paddingTop: '56.25%', // 16:9
   },
   cardContent: {
+    minHeight: 112,
     flexGrow: 1,
   },
 });
@@ -50,7 +51,7 @@ const ContentsListViewPage = props => {
                         <Dotdotdot clamp={2}>
                           {`${content.title}`.split(' ').map((text, index) => {
                             return (
-                              <span key={text}>
+                              <span key={index}>
                                 {`${text} `}
                                 {index === 1 && <br />}
                               </span>
