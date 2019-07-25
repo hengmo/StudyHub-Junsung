@@ -14,13 +14,15 @@ import {
   Avatar,
   Grid,
   Menu,
+  MenuItem,
   Snackbar,
 } from '@material-ui/core';
 import SendMessageDialog from '../MyMessage/SendMessageDialog';
 import { AppContext } from '../../contexts/appContext';
 import classNames from 'classnames';
-import { Group, Place, Update, Category, Message } from '@material-ui/icons';
+import { Group, Place, Update, Category, } from '@material-ui/icons';
 import { apiUrl } from '../../helpers/apiClient';
+import RequestButton from '../UIElements/RequestButton';
 
 const style = theme => ({
   root: {
@@ -47,7 +49,7 @@ const style = theme => ({
   },
   simpleInformContainer: {
     height: '88%',
-    width: '59%',
+    width: '62%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -74,17 +76,19 @@ const style = theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  listItemText: {
+    paddingTop: 5,
+    fontSize: 15,
+    fontWeight: 600,
+  },
   buttonContainer: {
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     width: 150,
     margin: 2,
-  },
-  messageButton: {
-    top: -86,
-    left: 47,
   },
   mainContainer: {
     display: 'flex',
@@ -95,7 +99,7 @@ const style = theme => ({
     marginBottom: 50,
   },
   detailContainer: {
-    width: '60%',
+    width: '67%',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -109,7 +113,7 @@ const style = theme => ({
   },
   naverMap: {
     width: '100%',
-    height: 350,
+    height: 318,
     maxHeight: 350,
   },
   layout: {
@@ -129,7 +133,7 @@ const style = theme => ({
   },
   card: {
     width: '100%',
-    height: '100%',
+    height: '97%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -139,49 +143,34 @@ const style = theme => ({
 class DetailContentsViewPage extends Component {
   static contextType = AppContext;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      anchorEl: null,
-      anchorParticipantsEl: null,
-      messageSendDialogOpen: false,
-      sendMessageTo: '',
-    };
-    this.sendMessageDialog = null;
-  }
+  state = {
+    anchorEl: null,
+    anchorParticipantsEle: null,
+    messageSendDialogOpen: false,
+    sendMessageTo: '',
+    sendMessageDialog: null,
+  };
 
   leaderMenuOpen = event => {
     this.setState({ anchorEl: event.currentTarget });
   };
 
   participantMenusOpen = event => {
-    this.setState({ anchorParticipantsEl: event.currentTarget });
+    this.setState({ anchorParticipantsEle: event.currentTarget });
   };
 
   handleClose = () => {
-    this.setState({ 
-      ...this.state, 
-      sendMessageTo: '', 
-      messageSendDialogOpen: false, 
-      anchorEl: null, 
-      anchorParticipantsEl: null 
-    }, () => 
+    this.setState({ ...this.state, sendMessageTo: '', messageSendDialogOpen: false, anchorEl: null, anchorParticipantsEle: null }, () =>
       this.sendMessageDialog.setToInitialState(),
     );
   };
 
-  handleOpen = receiver => {
-    const { userInfo: { status: loginStatus }, } = this.props;
-    console.log(receiver);
+  handleOpen = index => {
+    const { userInfo: { status: loginStatus }, participants, } = this.props;
+    const receiver = participants[index].email;
     if (!loginStatus) {
-      return this.context.actions.snackbarOpenHandler('먼저 로그인 해주세요.', 'warning');
-    } else {
-      this.setState({ 
-        ...this.state, 
-        sendMessageTo: receiver, 
-        messageSendDialogOpen: true 
-      });
-    }
+      this.context.actions.snackbarOpenHandler('먼저 로그인 해주세요.', 'warning');
+    } else this.setState({ ...this.state, sendMessageTo: receiver, messageSendDialogOpen: true }, this.sendMessageDialog.setToInitialState(receiver));
   };
 
   userRendering = () => {
@@ -193,21 +182,23 @@ class DetailContentsViewPage extends Component {
       joinStudy,
       leaveStudy,
       deleteStudy,
+      buttonLoading,
     } = this.props;
+
     if (loginStatus) {
       if (content.leader.email === loginedUserEmail) {
         return (
-          <Button variant="contained" className={classes.button} color="primary" onClick={deleteStudy}>
-            스터디 삭제
-          </Button>
+          <RequestButton value="스터디 삭제" buttonLoading={buttonLoading} clickHandler={deleteStudy} />
         );
       } else if (participants.map(user => user.email).includes(loginedUserEmail)) {
         return (
           <div style={{ textAlign: 'center' }}>
             <Typography variant="h6">참여중인 스터디 입니다.</Typography>
-            <Button className={classes.button} variant="contained" color="primary" onClick={leaveStudy}>
-              탈퇴하기
-            </Button>
+            <div className={classes.buttonContainer}>
+              <div className={classes.wrapper}>
+                <RequestButton value="탈퇴하기" buttonLoading={buttonLoading} clickHandler={leaveStudy} />
+              </div>
+            </div>
           </div>
         );
       }
@@ -215,9 +206,7 @@ class DetailContentsViewPage extends Component {
         <div style={{ textAlign: 'center' }}>
           <Typography variant="h6">참여 하시겠습니까?</Typography>
           <div className={classes.buttonContainer}>
-            <Button className={classes.button} variant="contained" color="primary" onClick={joinStudy}>
-              참여하기{' '}
-            </Button>
+            <RequestButton value="참여하기" buttonLoading={buttonLoading} clickHandler={joinStudy} />
           </div>
         </div>
       );
@@ -233,9 +222,32 @@ class DetailContentsViewPage extends Component {
     );
   };
 
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  };
+
+  handleButtonClick = () => {
+    if (!this.state.loading) {
+      this.setState(
+        {
+          success: false,
+          loading: true,
+        },
+        () => {
+          this.timer = setTimeout(() => {
+            this.setState({
+              loading: false,
+              success: true,
+            });
+          }, 2000);
+        },
+      );
+    }
+  };
+
   render() {
     const { classes, content, participants } = this.props;
-    const { anchorParticipantsEl, messageSendDialogOpen, sendMessageTo, snackbarOpen } = this.state;
+    const { anchorEl, anchorParticipantsEle, messageSendDialogOpen, sendMessageTo, snackbarOpen } = this.state;
     const options = {
       weekday: 'long',
       year: 'numeric',
@@ -257,7 +269,7 @@ class DetailContentsViewPage extends Component {
                       return (
                         <span key={text}>
                           {`${text} `}
-                          {index === 3 && <br />}
+                          {index === 2 && <br />}
                         </span>
                       )
                     })}
@@ -276,7 +288,7 @@ class DetailContentsViewPage extends Component {
                 <CardMedia
                   component="img"
                   alt="coverImg"
-                  style={{ width: '100%', height: '45vh', }}
+                  style={{ width: '100%', height: '48vh', }}
                   src={`${apiUrl}/${content.imageUrl}`}
                 />
               </Card>
@@ -301,10 +313,12 @@ class DetailContentsViewPage extends Component {
                   <Grid container spacing={16}>
                     <Grid item sm={6} md={4} lg={3}>
                       <Card className={classes.card}>
-                        <Avatar style={{ width: 73, height: 73, marginTop: 12 }} src={`${apiUrl}/${content.leader.profileImg}`} />
-                        <Button className={classes.messageButton}>
-                          <Message onClick={() => this.handleOpen(content.leader.email)} />
+                        <Button aria-owns={anchorEl ? 'leader-menus' : undefined} aria-haspopup="true" onClick={this.leaderMenuOpen}>
+                          <Avatar style={{ width: 73, height: 73, marginTop: 12 }} src={`${apiUrl}/${content.leader.profileImg}`} />
                         </Button>
+                        <Menu id="leader-menus" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
+                          <MenuItem onClick={() => this.handleOpen(content.leader.email)}>쪽지 보내기</MenuItem>
+                        </Menu>
                         <CardContent style={{ textAlign: 'center' }}>
                           <Typography gutterBottom fontWeight="fontWeightMedium">
                             {content.leader.name}
@@ -314,11 +328,11 @@ class DetailContentsViewPage extends Component {
                       </Card>
                     </Grid>
 
-                    {participants.map(user => (
+                    {participants.map((user, index) => (
                       <Grid item key={user.name} sm={6} md={4} lg={3}>
                         <Card className={classes.card}>
                           <Button
-                            aria-owns={anchorParticipantsEl ? 'participants-menus' : undefined}
+                            aria-owns={anchorParticipantsEle ? 'participants-menus' : undefined}
                             aria-haspopup="true"
                             onClick={this.participantMenusOpen}
                           >
@@ -326,11 +340,11 @@ class DetailContentsViewPage extends Component {
                           </Button>
                           <Menu
                             id="participants-menus"
-                            anchorEl={anchorParticipantsEl}
-                            open={Boolean(anchorParticipantsEl)}
+                            anchorEl={anchorParticipantsEle}
+                            open={Boolean(anchorParticipantsEle)}
                             onClose={this.handleClose}
                           >
-                            <Message onClick={() => this.handleOpen(user.email)}>쪽지 보내기</Message>
+                            <MenuItem onClick={() => this.handleOpen(index)}>쪽지 보내기</MenuItem>
                           </Menu>
                           <CardContent style={{ textAlign: 'center' }}>
                             <Typography gutterBottom fontWeight="fontWeightMedium">
@@ -345,28 +359,28 @@ class DetailContentsViewPage extends Component {
                 </div>
               </div>
             </div>
-            <Card style={{ width: '33%', height: '80%', maxWidth: 373, }}>
+            <Card style={{ width: '29%', height: '80%', maxWidth: 373, }}>
               <CardContent style={{ padding: 0 }}>
                 <List style={{ minWidth: 180 }}>
                   <ListItem>
                     <Avatar className={classes.avatarIcon}>
                       <Update />
                     </Avatar>
-                    <ListItemText primary="날짜" secondary={new Date(content.createdAt).toLocaleDateString('ko-KR', options)} />
+                    <ListItemText primary="날짜" secondary={<Typography className={classes.listItemText}>{new Date(content.createdAt).toLocaleDateString('ko-KR', options)}</Typography>} />
                   </ListItem>
                   <Divider />
                   <ListItem>
                     <Avatar className={classes.avatarIcon}>
                       <Place />
                     </Avatar>
-                    <ListItemText primary="장소" secondary={content.studyLocation} />
+                    <ListItemText primary="장소" secondary={<Typography className={classes.listItemText}>{content.studyLocation}</Typography>} />
                   </ListItem>
                   <Divider />
                   <ListItem>
                     <Avatar className={classes.avatarIcon}>
                       <Category />
                     </Avatar>
-                    <ListItemText primary="분류" secondary={`${content.categories}`} />
+                    <ListItemText primary="분류" secondary={<Typography className={classes.listItemText}>{`${content.categories}`}</Typography>} />
                   </ListItem>
                 </List>
               </CardContent>

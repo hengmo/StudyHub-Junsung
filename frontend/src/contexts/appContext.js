@@ -45,17 +45,21 @@ export default class AppContextProvider extends Component {
   };
 
   //Naver Map Api 사용 func
-  makeAddress = (item) => {
+  makeAddress = item => {
     if (!item) {
       return;
     }
 
     let name = item.name,
-        region = item.region,
-        land = item.land,
-        isRoadAddress = name === 'roadaddr';
+      region = item.region,
+      land = item.land,
+      isRoadAddress = name === 'roadaddr';
 
-    let sido = '', sigugun = '', dongmyun = '', ri = '', rest = '';
+    let sido = '',
+      sigugun = '',
+      dongmyun = '',
+      ri = '',
+      rest = '';
 
     if (this.hasArea(region.area1)) {
       sido = region.area1.name;
@@ -82,7 +86,7 @@ export default class AppContextProvider extends Component {
         rest += land.number1;
 
         if (this.hasData(land.number2)) {
-          rest += ('-' + land.number2);
+          rest += '-' + land.number2;
         }
       }
 
@@ -102,19 +106,19 @@ export default class AppContextProvider extends Component {
     return [sido, sigugun, dongmyun, ri, rest].join(' ');
   };
 
-  hasArea = (area) => {
+  hasArea = area => {
     return !!(area && area.name && area.name !== '');
   };
-  
-  hasData = (data) => {
+
+  hasData = data => {
     return !!(data && data !== '');
   };
-  
+
   checkLastString = (word, lastString) => {
     return new RegExp(lastString + '$').test(word);
   };
-  
-  hasAddition = (addition) => {
+
+  hasAddition = addition => {
     return !!(addition && addition.value);
   };
 
@@ -135,38 +139,40 @@ export default class AppContextProvider extends Component {
     getContentsLatest: () => apiClient.get('/contents/latest'),
     getContentsByCategory: searchTerm => apiClient.get(`/contents/context/${searchTerm}`), //메인 검색창에서 카테고리 검색 시 데이터 보여줌
     getContentsDetail: detailTerm => apiClient.get(`/contents/detail/${detailTerm}`), //상세내용 보여줌
+    sendMessage: (recipientEmail, messageTitle, messageBody, senderId) => apiClient.post('/messages/send', { recipientEmail, messageTitle, messageBody, senderId }),
     removeUser: () => apiClient.post('/users/delete'),
     getCurrentPosition: () => {
-      navigator.geolocation.getCurrentPosition(position => {
-        return this.setState({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          loadingStatus: true,
-        });
-      }, () => {
-        return this.setState({
-          loadingStatus: true,
-        });
-      });
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          return this.setState({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            loadingStatus: true,
+          });
+        },
+        () => {
+          return this.setState({
+            loadingStatus: true,
+          });
+        },
+      );
     },
     getAddressesByLatLng: latlng => {
       return new Promise((resolve, reject) => {
-        naver.maps.Service.reverseGeocode({
+        naver.maps.Service.reverseGeocode(
+          {
             coords: latlng,
-            orders: [
-                naver.maps.Service.OrderType.ADDR,
-                naver.maps.Service.OrderType.ROAD_ADDR
-            ].join(',')
+            orders: [naver.maps.Service.OrderType.ADDR, naver.maps.Service.OrderType.ROAD_ADDR].join(','),
           },
           (status, response) => {
             if (status === naver.maps.Service.Status.ERROR) {
               return reject(alert('지도 API 오류입니다.'));
             }
-  
+
             let items = response.v2.results,
-                address = '',
-                htmlAddresses = [];
-  
+              address = '',
+              htmlAddresses = [];
+
             for (let i = 0, ii = items.length, item; i < ii; i++) {
               item = items[i];
               address = this.makeAddress(item) || '';
@@ -194,7 +200,7 @@ export default class AppContextProvider extends Component {
         );
       });
     },
-    
+
     checkAuth: async () => {
       return apiClient
         .post('/users/checkAuth')

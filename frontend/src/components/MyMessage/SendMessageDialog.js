@@ -1,38 +1,27 @@
-import React, { Component } from 'react';
+import React,{Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide, DialogActions, TextField, } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
-import DialogActions from '@material-ui/core/DialogActions';
-import TextField from '@material-ui/core/TextField';
 import { AppContext } from '../../contexts/appContext';
-import apiClient from '../../helpers/apiClient';
+import RequestButton from '../UIElements/RequestButton';
 
 const styles = {
   appBar: {
     position: 'relative',
-    paddingRight: 0,
+    paddingRight: "0!important",
   },
-
   flex: {
     flex: 1,
   },
-
-  dialogBody: {
+  dialogBody:{
     margin: '20px 15px',
     width: 'calc(100% - 30px)',
   },
-
-  dialogTextField: {
+  dialogTextField:{
     margin: '8px',
-    width: 'calc(100% - 16px)',
-  },
+    width: 'calc(100% - 16px)'
+  }
 };
 
 function Transition(props) {
@@ -42,66 +31,45 @@ function Transition(props) {
 class SendMessageDialog extends Component {
   static contextType = AppContext;
 
-  constructor(props) {
-    super(props);
+  state = {
+    messageTitle: '',
+    messageBody: '',
+    sendMessageTo: '',
+    buttonLoading: false,
+  };
 
-    this.state = {
-      messageTitle: null,
-      messageBody: null,
-      sendMessageTo: null,
-    };
-
-    this.setToInitialState = this.setToInitialState.bind(this);
-    this.sendMessage = this.sendMessage.bind(this);
-    this.handleTextFieldOnBlur = this.handleTextFieldOnBlur.bind(this);
-  }
-
-  sendMessage() {
+  sendMessage = async () => {
     const { sendMessageTo, messageTitle, messageBody } = this.state;
-    if (
-      sendMessageTo === null ||
-      messageTitle === null ||
-      messageBody === null ||
-      sendMessageTo === '' ||
-      messageTitle === '' ||
-      messageBody === ''
-    ) {
-      this.context.actions.snackbarOpenHandler('공란이 있을 수 없습니다.', 'warning');
-      return;
+    const { userInfo } = this.context.state;
+
+    if (sendMessageTo === '' || messageTitle === '' || messageBody === ''){
+      this.context.actions.snackbarOpenHandler("공란이 있을 수 없습니다.",'warning');
+      return false;
+    }
+    else if (sendMessageTo.trim() === userInfo.email){
+      this.context.actions.snackbarOpenHandler("자기 자신에게 쪽지를 전송할 수 없습니다.",'warning');
+      return false;
     }
 
-    if (sendMessageTo.trim() === this.context.state.userInfo.email) {
-      this.context.actions.snackbarOpenHandler('자기 자신에게 쪽지를 전송할 수 없습니다.', 'warning');
-      return;
-    }
-
-    apiClient
-      .post('/messages/send', {
-        recipientEmail: sendMessageTo.trim(),
-        messageTitle: messageTitle,
-        messageBody: messageBody,
-        senderId: this.context.state.userInfo.id,
-      })
-      .then(res => {
-        this.context.actions.snackbarOpenHandler(res.message, res.state, {
-          vertical: 'bottom',
-          horizontal: 'left',
-        });
-        if (res.state === 'success') this.props.handleClose('messageSendDialog');
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  handleTextFieldOnBlur(e) {
     this.setState({
-      ...this.state,
-      [e.target.name]: e.target.value,
+      buttonLoading: true,
+    });
+    const res = await this.context.actions.sendMessage(sendMessageTo.trim(), messageTitle, messageBody, userInfo.id);
+    this.context.actions.snackbarOpenHandler(res.message, res.state, { vertical: 'bottom', horizontal: 'left' });
+    this.props.handleClose();
+    this.setState({
+      buttonLoading: false,
     });
   }
 
-  setToInitialState(to = null) {
+  handleTextFieldOnBlur = e => {
+    this.setState({
+      ...this.state,
+      [e.target.name]: e.target.value
+    });
+  }
+
+  setToInitialState = (to = null) =>{
     this.setState({
       ...this.state,
       messageTitle: null,
@@ -111,46 +79,50 @@ class SendMessageDialog extends Component {
   }
 
   render() {
-    const { classes, initialRecipientEmail } = this.props;
+    const { buttonLoading } = this.state;
+    const { classes, open, initialRecipientEmail } = this.props;
 
     return (
-      <Dialog open={this.props.open} onClose={() => this.props.handleClose()} TransitionComponent={Transition}>
+      <Dialog
+        open={open}
+        onClose={()=> this.props.handleClose()}
+        TransitionComponent={Transition}
+      >
         <AppBar className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" color="inherit" className={classes.flex}>
               쪽지 작성
             </Typography>
-            <IconButton color="inherit" onClick={() => this.props.handleClose()} aria-label="Close">
+            <IconButton color="inherit" onClick={()=> this.props.handleClose()} aria-label="Close">
               <CloseIcon />
             </IconButton>
           </Toolbar>
         </AppBar>
         <div className={classes.dialogBody}>
-          {initialRecipientEmail === '' && (
-            <TextField
-              id="outlined-full-width"
-              label="받는 사람"
-              name="sendMessageTo"
-              defaultValue={initialRecipientEmail}
-              className={classes.dialogTextField}
-              placeholder="아이디(이메일)"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              autoFocus={!Boolean(initialRecipientEmail)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onBlur={this.handleTextFieldOnBlur}
-            />
-          )}
+          <TextField
+            disabled={initialRecipientEmail ? true : false}
+            id="outlined-full-width"
+            label="받는 사람"
+            name='sendMessageTo'
+            defaultValue={initialRecipientEmail}
+            className={classes.dialogTextField}
+            placeholder="아이디(이메일)"
+            fullWidth
+            margin="normal"
+            variant="outlined"
+            autoFocus={!Boolean(initialRecipientEmail)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onBlur={this.handleTextFieldOnBlur}
+          />
 
           <TextField
             id="outlined-full-width"
             label="제목"
-            name="messageTitle"
-            autoFocus={Boolean(initialRecipientEmail)}
-            className={classes.dialogTextField}
+            name = 'messageTitle'
+            autoFocus = {Boolean(this.props.initialRecipientEmail)}
+            className = {classes.dialogTextField}
             placeholder="내용"
             fullWidth
             margin="normal"
@@ -164,7 +136,7 @@ class SendMessageDialog extends Component {
           <TextField
             id="outlined-full-width"
             label="내용"
-            name="messageBody"
+            name='messageBody'
             multiline
             rows="12"
             className={classes.dialogTextField}
@@ -178,8 +150,8 @@ class SendMessageDialog extends Component {
             onBlur={this.handleTextFieldOnBlur}
           />
 
-          <DialogActions>
-            <Button onClick={this.sendMessage}>전송</Button>
+          <DialogActions style={{ margin: 0, }}>
+            <RequestButton value="전송" buttonLoading={buttonLoading} clickHandler={this.sendMessage} />
           </DialogActions>
         </div>
       </Dialog>

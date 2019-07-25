@@ -11,6 +11,7 @@ class DetailContentsController extends Component {
   state = {
     detailTerm: this.props.match.params.id,
     userInfo: {},
+    buttonLoading: false,
   };
 
   async componentDidMount() {
@@ -36,26 +37,35 @@ class DetailContentsController extends Component {
     });
   }
 
+  buttonSetState = () => {
+    this.setState({
+      buttonLoading: true,
+    });
+  };
+
   joinStudy = async () => {
     const { detailTerm } = this.state;
+    this.buttonSetState();
     await this.context.actions.joinStudy(detailTerm);
     window.location.reload();
   };
 
   leaveStudy = async () => {
     const { detailTerm } = this.state;
+    this.buttonSetState();
     await this.context.actions.leaveStudy(detailTerm);
     window.location.reload();
   };
 
   deleteStudy = async () => {
     const { detailTerm } = this.state;
+    this.buttonSetState();
     await this.context.actions.deleteStudy(detailTerm);
     this.props.history.push('/');
   };
 
   render() {
-    const { content, participants, userInfo, } = this.state;
+    const { content, participants, userInfo, buttonLoading, } = this.state;
     return (
       <div>
         {content ? (
@@ -66,6 +76,7 @@ class DetailContentsController extends Component {
             joinStudy={this.joinStudy}
             deleteStudy={this.deleteStudy}
             leaveStudy={this.leaveStudy}
+            buttonLoading={buttonLoading}
           />
         ) : (
           <LoadingProgress />

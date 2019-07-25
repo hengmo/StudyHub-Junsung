@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { AppContext } from '../../contexts/appContext';
 import queryString from 'query-string';
-import { withStyles, Paper, TextField, Button, Typography, OutlinedInput, Select, MenuItem, FormControl, Checkbox, FormGroup, FormControlLabel, InputLabel } from '@material-ui/core';
+import { withStyles, Paper, TextField, Typography, OutlinedInput, Select, MenuItem, FormControl, Checkbox, FormGroup, FormControlLabel, InputLabel } from '@material-ui/core';
 import { Favorite, FavoriteBorder } from '@material-ui/icons';
+import RequestButton from '../UIElements/RequestButton';
 import studyBackgroundImg from '../../images/study-background.jpg';
 /* global naver */
 
@@ -86,6 +87,7 @@ class ContentsWritePage extends Component {
     description: '',
     addresses: [],
     selectedLocation: '',
+    buttonLoading: false,
   };
 
   categoryHandler = e => {
@@ -107,8 +109,7 @@ class ContentsWritePage extends Component {
   };
 
   //확인 버튼 클릭시 formData 초기화 후 context addContents에 formData 전달하여 호출
-  addContents = async e => {
-    e.preventDefault();
+  addContents = async () => {
     const { title, selectedCategories: categories, description, selectedLocation: studyLocation } = this.state;
     const { name: leader, email, image: profileImg } = this.context.state.userInfo;
     const coverImg = document.getElementById('coverImg').files[0];
@@ -122,6 +123,10 @@ class ContentsWritePage extends Component {
     else if (coverImg && coverImg.type !== 'image/png' && coverImg.type !== 'image/jpeg' && coverImg.type !== 'image/bmp') {
       return this.context.actions.snackbarOpenHandler('이미지 파일 형식이 아닙니다.', 'warning');
     }
+
+    this.setState({
+      buttonLoading: true,
+    });
 
     const dataInObject = {
       title,
@@ -169,7 +174,7 @@ class ContentsWritePage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { categories, selectedLocation, addresses } = this.state;
+    const { categories, selectedLocation, addresses, buttonLoading } = this.state;
     return (
       <div className={classes.root}>
         <img className={classes.topImg} src={studyBackgroundImg} alt="" />
@@ -251,9 +256,7 @@ class ContentsWritePage extends Component {
               <input type="file" id="coverImg" multiple />
               <Typography style={{ fontSize: 14, }}>(미 선택시 기본 이미지 적용)</Typography>
             </div>
-            <Button className={classes.button} variant="contained" color="primary" onClick={this.addContents}>
-              스터디 작성
-            </Button>
+            <RequestButton value="스터디 작성" buttonLoading={buttonLoading} clickHandler={this.addContents} />
           </Paper>
         </div>
       </div>

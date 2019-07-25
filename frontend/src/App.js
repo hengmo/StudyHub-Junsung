@@ -49,7 +49,6 @@ class App extends Component {
             <Route path="/detail//" component={Error} />
             <Route path="/signup" component={SignUpPage} />
             <Route path="/signin" component={SignInPage} />
-            <Route path="/loading" component={LoadingProgress} />
             <PrivateRoute path="/mypage" loginStatus={loginStatus} component={MyPageController} />
             <PrivateRoute path="/mymessagepage" loginStatus={loginStatus} component={MyMessagePage} />
             <Footer />
