@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import { green, red } from '@material-ui/core/colors';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
+import { Link } from 'react-router-dom';
 import { AppContext } from '../../contexts/appContext';
 
 const styles = theme => ({
@@ -195,6 +196,9 @@ class SignInPage extends Component {
               />
               <Button style={{ marginTop: 50 }} className={`${classes.Button} ${classes.ItemCenter}`} type="submit" fullWidth color="primary" variant="contained">
                 로그인
+              </Button>
+              <Button className={`${classes.ButtonMargin} ${classes.ItemCenter}`} type="submit" fullWidth color="primary" variant="contained" component={Link} to="/signup">
+                회원가입
               </Button>
               <a className={`removeLinkDec ${classes.ButtonMargin} ${classes.ItemCenter}`} href={`${apiUrl}/users/google_auth`}>
                 <Button variant="contained" className={`${classes.GoogleCol} ${classes.Button}`}>

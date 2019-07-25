@@ -151,26 +151,30 @@ class DetailContentsViewPage extends Component {
     sendMessageDialog: null,
   };
 
-  leaderMenuOpen = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  leaderMenuOpen = (e, email) => {
+    this.setState({ 
+      anchorEl: e.currentTarget,
+      sendMessageTo: email,
+    });
   };
 
-  participantMenusOpen = event => {
-    this.setState({ anchorParticipantsEle: event.currentTarget });
+  participantMenusOpen = (e, email) => {
+    this.setState({ 
+      anchorParticipantsEle: e.currentTarget,
+      sendMessageTo: email,
+    });
   };
 
   handleClose = () => {
-    this.setState({ ...this.state, sendMessageTo: '', messageSendDialogOpen: false, anchorEl: null, anchorParticipantsEle: null }, () =>
-      this.sendMessageDialog.setToInitialState(),
-    );
+    this.setState({ ...this.state, sendMessageTo: '', messageSendDialogOpen: false, anchorEl: null, anchorParticipantsEle: null }, () => this.sendMessageDialog.setToInitialState(),);
   };
 
-  handleOpen = index => {
-    const { userInfo: { status: loginStatus }, participants, } = this.props;
-    const receiver = participants[index].email;
+  handleOpen = () => {
+    const { sendMessageTo } = this.state;
+    const { userInfo: { status: loginStatus }, } = this.props;
     if (!loginStatus) {
       this.context.actions.snackbarOpenHandler('먼저 로그인 해주세요.', 'warning');
-    } else this.setState({ ...this.state, sendMessageTo: receiver, messageSendDialogOpen: true }, this.sendMessageDialog.setToInitialState(receiver));
+    } else this.setState({ ...this.state, messageSendDialogOpen: true }, this.sendMessageDialog.setToInitialState(sendMessageTo));
   };
 
   userRendering = () => {
@@ -313,11 +317,11 @@ class DetailContentsViewPage extends Component {
                   <Grid container spacing={16}>
                     <Grid item sm={6} md={4} lg={3}>
                       <Card className={classes.card}>
-                        <Button aria-owns={anchorEl ? 'leader-menus' : undefined} aria-haspopup="true" onClick={this.leaderMenuOpen}>
+                        <Button aria-owns={anchorEl ? 'leader-menus' : undefined} aria-haspopup="true" onClick={e => this.leaderMenuOpen(e, content.leader.email)}>
                           <Avatar style={{ width: 73, height: 73, marginTop: 12 }} src={`${apiUrl}/${content.leader.profileImg}`} />
                         </Button>
                         <Menu id="leader-menus" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
-                          <MenuItem onClick={() => this.handleOpen(content.leader.email)}>쪽지 보내기</MenuItem>
+                          <MenuItem onClick={this.handleOpen}>쪽지 보내기</MenuItem>
                         </Menu>
                         <CardContent style={{ textAlign: 'center' }}>
                           <Typography gutterBottom fontWeight="fontWeightMedium">
@@ -328,13 +332,13 @@ class DetailContentsViewPage extends Component {
                       </Card>
                     </Grid>
 
-                    {participants.map((user, index) => (
+                    {participants.map(user => (
                       <Grid item key={user.name} sm={6} md={4} lg={3}>
                         <Card className={classes.card}>
                           <Button
                             aria-owns={anchorParticipantsEle ? 'participants-menus' : undefined}
                             aria-haspopup="true"
-                            onClick={this.participantMenusOpen}
+                            onClick={e => this.participantMenusOpen(e, user.email)}
                           >
                             <Avatar style={{ width: 73, height: 73, marginTop: 12 }} src={`${apiUrl}/${user.profileImg}`} />
                           </Button>
@@ -344,7 +348,7 @@ class DetailContentsViewPage extends Component {
                             open={Boolean(anchorParticipantsEle)}
                             onClose={this.handleClose}
                           >
-                            <MenuItem onClick={() => this.handleOpen(index)}>쪽지 보내기</MenuItem>
+                            <MenuItem onClick={this.handleOpen}>쪽지 보내기</MenuItem>
                           </Menu>
                           <CardContent style={{ textAlign: 'center' }}>
                             <Typography gutterBottom fontWeight="fontWeightMedium">
