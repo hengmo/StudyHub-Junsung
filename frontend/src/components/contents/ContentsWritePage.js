@@ -71,6 +71,9 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     width: '95%',
   },
+  buttonContainer: {
+    marginBottom: 10,
+  },
   button: {
     fontSize: 20,
     margin: 40,
@@ -256,7 +259,9 @@ class ContentsWritePage extends Component {
               <input type="file" id="coverImg" multiple />
               <Typography style={{ fontSize: 14, }}>(미 선택시 기본 이미지 적용)</Typography>
             </div>
-            <RequestButton value="스터디 작성" buttonLoading={buttonLoading} clickHandler={this.addContents} />
+            <div className={classes.buttonContainer}>
+              <RequestButton value="스터디 작성" buttonLoading={buttonLoading} clickHandler={this.addContents} />
+            </div>
           </Paper>
         </div>
       </div>

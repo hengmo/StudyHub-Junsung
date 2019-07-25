@@ -15,6 +15,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
 import SendIcon from '@material-ui/icons/Send';
+import LoadingProgress from '../UIElements/LoadingProgress';
 
 const styles = theme => ({
   marginAuto: {
@@ -41,7 +42,7 @@ const styles = theme => ({
 
   page: {
     width: '70vw',
-    height: '60vw',
+    height: 'auto',
     minHeight: '60vh',
     margin: '10vh auto',
   },
@@ -179,6 +180,7 @@ class MyMessagePage extends Component {
   }
 
   renderingList = () => {
+    console.log(this.state.messages);
     const messages = this.state.messages.map((message, index) => {
       return (
         <Inbox
@@ -262,20 +264,22 @@ class MyMessagePage extends Component {
     // };
 
     return this.state.loading === true ? (
-      <div className={classes.page} />
+      <LoadingProgress />
     ) : (
       <Fragment>
         <div className={classes.page}>
           <div className={classes.aboveList}>
             <div className={classes.leftOptions}>
-              <IconButton onClick={this.removeMessages} aria-label="Delete">
-                <DeleteIcon />
-              </IconButton>
+              <Tooltip title="쪽지 삭제" aria-label="delete">
+                <IconButton onClick={this.removeMessages} aria-label="Delete">
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
             </div>
             <div className={classes.rightPager}>
               <Grid container>
                 <Grid className={classes.marginAuto} item xs={6}>
-                  <Typography>{total === 0 ? '메시지 없음' : `${(page - 1) * showNum + 1} - ${(page - 1) * showNum + currentNum} 중 ${total}`}</Typography>
+                  <Typography style={{ minWidth: 110, }}>{total === 0 ? '메시지 없음' : `${(page - 1) * showNum + 1} - ${(page - 1) * showNum + currentNum} 중 ${total}`}</Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <IconButton disabled={page === 1} onClick={() => this.messagePagerHandler('left')}>
@@ -309,7 +313,6 @@ class MyMessagePage extends Component {
         <SendMessageDialog
           innerRef={ele => (this.sendMessageDialog = ele)}
           handleClose={this.handleClose}
-          handleOpen={this.handleOpen}
           initialRecipientEmail={sendMessageTo}
           open={messageSendDialogOpen}
         />
