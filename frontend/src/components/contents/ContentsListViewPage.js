@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles, Card, CardContent, CardMedia, Grid, Typography, CardActionArea, } from '@material-ui/core';
-import Dotdotdot from 'react-dotdotdot'
 import { apiUrl } from '../../helpers/apiClient';
 
 const styles = theme => ({
@@ -36,6 +35,14 @@ const styles = theme => ({
 
 const ContentsListViewPage = props => {
   const { classes, contents } = props;
+
+  const renderStrWithEllipsis = (str) => {
+    let str_temp = str.substring(0, 18)
+    if(str.length >= 18)
+      str_temp = str_temp + "...";
+    return str_temp;
+  };
+
   return (
     <main className={classes.root}>
       <div className={classNames(classes.layout, classes.cardGrid)}>
@@ -47,18 +54,9 @@ const ContentsListViewPage = props => {
                   <Link to={`/detail/${content.id}`} style={{ textDecoration: 'none' }}>
                     <CardMedia className={classes.cardMedia} image={`${apiUrl}/${content.imageUrl}`} title="Image title" />
                     <CardContent className={classes.cardContent}>
-                      <Typography component={'span'} style={{ fontSize: 24,}}>
-                        <Dotdotdot clamp={2}>
-                          {`${content.title}`.split(' ').map((text, index) => {
-                            return (
-                              <span key={index}>
-                                {`${text} `}
-                                {index === 1 && <br />}
-                              </span>
-                            )
-                          })}
-                        </Dotdotdot>
-                      </Typography>
+                      <div style={{ fontSize: 24, wordBreak: 'keep-all', color: 'black', }}>
+                      {renderStrWithEllipsis(content.title)}
+                      </div>
                     </CardContent>
                   </Link>
                   <Typography style={{ paddingLeft: 16, paddingBottom: 8, }}>

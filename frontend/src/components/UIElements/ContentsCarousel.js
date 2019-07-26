@@ -11,7 +11,6 @@ import {
   Avatar,
 } from '@material-ui/core';
 import { ArrowForward, ArrowBack, } from '@material-ui/icons'
-import Dotdotdot from 'react-dotdotdot'
 import { apiUrl } from '../../helpers/apiClient';
 import { AppContext } from '../../contexts/appContext';
 
