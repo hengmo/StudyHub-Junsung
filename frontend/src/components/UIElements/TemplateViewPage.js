@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import movie from '../../images/main-video.mp4';
 import classNames from 'classnames';
-import { Button, Typography, withStyles, Grid, } from '@material-ui/core';
+import { Button, Typography, withStyles, } from '@material-ui/core';
 import LoadingProgress from '../UIElements/LoadingProgress';
 import ContentsCarousel from './ContentsCarousel';
 
@@ -53,6 +53,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
     height: 'auto',
     width: '44%',
+    maxWidth: 670,
   },
   studyTextContainer: {
     marginTop: 26,

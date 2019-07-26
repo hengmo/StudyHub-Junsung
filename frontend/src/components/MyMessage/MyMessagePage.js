@@ -2,12 +2,11 @@ import React, { Component, Fragment } from 'react';
 import Inbox from './Inbox';
 import { AppContext } from '../../contexts/appContext';
 import apiClient from '../../helpers/apiClient';
-import { List, Button, IconButton, Grid, Typography, withStyles, Snackbar, Fab, Tooltip, } from '@material-ui/core';
+import { List, Button, IconButton, Grid, Typography, withStyles, Snackbar, Tooltip, } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SendMessageDialog from './SendMessageDialog';
-import SendIcon from '@material-ui/icons/Send';
 import LoadingProgress from '../UIElements/LoadingProgress';
 
 const styles = theme => ({

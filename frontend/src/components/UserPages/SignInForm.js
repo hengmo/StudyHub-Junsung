@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './Page.css';
-import apiClient from '../../helpers/apiClient';
 import { apiUrl } from '../../helpers/apiClient';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';

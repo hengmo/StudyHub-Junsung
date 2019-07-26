@@ -30,7 +30,7 @@ class App extends Component {
       this.props.actions.checkAuth();
     };
   };
-
+  
   render() {
     const loginStatus = this.props.state.userInfo.status;
     return (

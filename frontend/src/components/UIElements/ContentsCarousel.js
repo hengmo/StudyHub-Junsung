@@ -32,6 +32,11 @@ const style = theme => ({
     minHeight: 112,
     flexGrow: 1,
   },
+  cardTitle: {
+    fontSize: 24, 
+    wordBreak: 'keep-all',
+    color: 'black',
+  },
 });
 
 class ContentsCarousel extends Component {
@@ -75,18 +80,9 @@ class ContentsCarousel extends Component {
               <Link to={`/detail/${content.id}`} style={{ textDecoration: 'none' }}>
                 <CardMedia className={classes.cardMedia} image={`${apiUrl}/${content.imageUrl}`} title={content.title} />
                 <CardContent className={classes.cardContent}>
-                  <Typography component={'span'} style={{ fontSize: 24,}}>
-                    <Dotdotdot clamp={2}>
-                      {`${content.title}`.split(' ').map((text, index) => {
-                        return (
-                          <span key={index}>
-                            {`${text} `}
-                            {index === 1 && <br />}
-                          </span>
-                        )
-                      })}
-                    </Dotdotdot>
-                  </Typography>
+                  <Dotdotdot className={classes.cardTitle} clamp={3}>
+                    {content.title}
+                  </Dotdotdot>
                 </CardContent>
               </Link>
               <Typography style={{ paddingLeft: 16, paddingBottom: 8, }}>

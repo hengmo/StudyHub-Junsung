@@ -80,6 +80,7 @@ const style = theme => ({
     paddingTop: 5,
     fontSize: 15,
     fontWeight: 600,
+    wordBreak: 'keep-all',
   },
   buttonContainer: {
     display: 'flex',
@@ -246,15 +247,8 @@ class DetailContentsViewPage extends Component {
               <div className={classes.simpleInformContainer}>
                 <div className={classes.informTextContainer}>
                   <Typography style={{ marginBottom: 13 }}>{new Date(content.createdAt).toLocaleDateString('ko-KR', options)}</Typography>
-                  <Typography variant="h4">
-                    {content.title.split(' ').map((text, index) => {
-                      return (
-                        <span key={index}>
-                          {`${text} `}
-                          {index === 2 && <br />}
-                        </span>
-                      )
-                    })}
+                  <Typography variant="h4" style={{ wordBreak: 'keep-all', }}>
+                    {content.title}
                     </Typography>
                 </div>
                 <div className={classes.leaderBtnContainer}>
