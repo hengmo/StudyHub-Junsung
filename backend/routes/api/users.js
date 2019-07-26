@@ -116,22 +116,30 @@ router.post('/signin',(req, res, next) => {
   // history.push() => basename이 붙기 때문에 pathname을 추출한다. 
   redirectURL = new URL(redirectURL).pathname;
 
-  passport.authenticate('local', async (err,user,info)=>{
+  passport.authenticate('local', async (err, user, info) => {
     if (err) return next(err)
     
     if (user){
-      await req.logIn(user, (err)=>{
+      await req.logIn(user, (err) => {
         if (err)
           next(err);
       })
     }
     info.url = info.url === null ? redirectURL : info.url;
-    res.send(info);
+    res.send({
+      info,
+      status : true,
+      id : user._id,
+      email : user.email,
+      image: user.image,
+      name: user.name,
+      date: user.date,
+    });
   })(req, res, next)
 })
 
 // test 용 router
-router.get('/session',(req, res, next)=>{
+router.get('/session',(req, res, next) => {
   res.send(req.header)
 });
 

@@ -50,6 +50,13 @@ class ContentsCarousel extends Component {
 
   changeActiveItem = (activeItemIndex) => this.setState({ activeItemIndex });
 
+  renderStrWithEllipsis = (str) => {
+    let str_temp = str.substring(0, 18)
+    if(str.length >= 18)
+      str_temp = str_temp + "...";
+    return str_temp;
+  };
+    
   render() {
     const { activeItemIndex, } = this.state;
     const { classes, contents, } = this.props;
@@ -80,9 +87,9 @@ class ContentsCarousel extends Component {
               <Link to={`/detail/${content.id}`} style={{ textDecoration: 'none' }}>
                 <CardMedia className={classes.cardMedia} image={`${apiUrl}/${content.imageUrl}`} title={content.title} />
                 <CardContent className={classes.cardContent}>
-                  <Dotdotdot className={classes.cardTitle} clamp={3}>
-                    {content.title}
-                  </Dotdotdot>
+                  <div className={classes.cardTitle}>
+                    {this.renderStrWithEllipsis(content.title)}
+                  </div>
                 </CardContent>
               </Link>
               <Typography style={{ paddingLeft: 16, paddingBottom: 8, }}>

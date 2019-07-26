@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../contexts/appContext';
+import { Persist } from 'react-persist'
 
 const styles = theme => ({
   container: {
@@ -117,17 +118,18 @@ class SignInPage extends Component {
   onSubmit = async e => {
     e.preventDefault();
     const { email, password } = this.state.formFieldInput;
+    await this.context.actions.signin(email, password);
 
-    const res = await this.context.actions.signin(email, password);
-    console.log(res);
+    const { state, message } = this.context.state.snackbarInfo;
+    console.log(state, message);
     
-    if (res.message === "Missing credentials") {
+    if (message === "Missing credentials") {
       return this.context.actions.snackbarOpenHandler('이메일 또는 비밀번호를 입력해주세요.', 'warning');
     }
-    else if (res.state === "warning") {
-      return this.context.actions.snackbarOpenHandler('입력하신 이메일 또는 비밀번호가 잘못 되었습니다.', res.state);
+    else if (state === "warning") {
+      return this.context.actions.snackbarOpenHandler('입력하신 이메일 또는 비밀번호가 잘못 되었습니다.', state);
     }
-    this.context.actions.snackbarOpenHandler(res.message, res.state);
+    this.context.actions.snackbarOpenHandler(message, state);
     this.props.history.push("/");
   }
 

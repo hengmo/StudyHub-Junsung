@@ -1,6 +1,7 @@
 import React, { Component, createContext } from 'react';
 import apiClient from '../helpers/apiClient';
 import socketIOClient from 'socket.io-client';
+import { Persist } from 'react-persist'
 /* global naver */
 
 const AppContext = createContext();
@@ -25,6 +26,8 @@ export default class AppContextProvider extends Component {
       name: '',
       date: '',
     },
+
+    snackbarInfo: {},
 
     unseenMessage: 0,
     // 소켓 Obj state
@@ -129,7 +132,22 @@ export default class AppContextProvider extends Component {
         ...obj,
       });
     },
-    signin: (email, password) => apiClient.post('/users/signin', {email, password}),
+    signin: (email, password) => apiClient.post('/users/signin', {email, password})
+    .then(res => {
+      this.setState({
+        ...this.state,
+        userInfo: {
+          status: res.status,
+          id: res.id,
+          email: res.email,
+          image: res.image,
+          name: res.name,
+          date: res.date,
+        },
+        snackbarInfo: res.info
+      });
+    })
+    .catch(err => console.log(err)),
     addContents: formData => apiClient.post('/contents', formData),
     joinStudy: detailTerm => apiClient.put(`/contents/join/${detailTerm}`),
     leaveStudy: detailTerm => apiClient.put(`/contents/leave/${detailTerm}`),
