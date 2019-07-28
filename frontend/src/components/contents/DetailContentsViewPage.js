@@ -33,14 +33,14 @@ const style = theme => ({
   },
   mainHeader: {
     width: '100%',
-    height: 220,
-    marginTop: 2,
+    height: 'auto',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     background: 'white',
   },
   topContainer: {
+    margin: '25px 0px',
     width: '74%',
     height: '100%',
     display: 'flex',

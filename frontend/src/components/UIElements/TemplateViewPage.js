@@ -27,6 +27,11 @@ const styles = theme => ({
   heroButtons: {
     marginTop: theme.spacing.unit * 4,
   },
+  startButton: {
+    fontSize: '2.5vh',
+    textDecoration: 'none',
+    width: '18vw',
+  },
   mainContainer: {
     top: -380,
     width: '100%',
@@ -113,29 +118,21 @@ const TemplateViewPage = props => {
               <div className={classes.heroButtons}>
                 {loginStatus ? (
                   <Button
+                    className={classes.startButton}
                     variant="contained"
                     component={Link}
                     to={`/write?lat=${lat}&lng=${lng}`}
                     color="primary"
-                    style={{
-                      fontSize: '2.5vh',
-                      textDecoration: 'none',
-                      width: '260px',
-                    }}
                   >
                     스터디 작성하기
                   </Button>
                 ) : (
                   <Button
+                    className={classes.startButton}
                     variant="contained"
                     component={Link}
                     to="/signup"
                     color="primary"
-                    style={{
-                      fontSize: '2.5vh',
-                      textDecoration: 'none',
-                      width: '260px',
-                    }}
                   >
                     스터디허브 가입하기
                   </Button>

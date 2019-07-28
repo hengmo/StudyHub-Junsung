@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { AppContext } from '../../contexts/appContext';
 import MyPageView from './MyPageView';
+import LoadingProgress from '../UIElements/LoadingProgress';
 
 class MyPageController extends Component {
   static contextType = AppContext;
@@ -45,7 +46,7 @@ class MyPageController extends Component {
         {contents ? (
           <MyPageView myStudy={myStudy} joinedStudy={joinedStudy} userInfo={userInfo} leaveStudy={this.leaveStudy} deleteStudy={this.deleteStudy} />
         ) : (
-          <div style={{ height: 900 }} />
+          <LoadingProgress />
         )}
       </div>
     );
