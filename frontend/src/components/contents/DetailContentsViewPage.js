@@ -26,7 +26,7 @@ const style = theme => ({
   headerContainer: {
     width: '72%',
     height: 'auto',
-    margin: '25px 0px',
+    margin: '45px 0px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -38,7 +38,7 @@ const style = theme => ({
     width: '85%',
   },
   informContainer: {
-    width: '40%',
+    width: '41%',
   },
   informWrapper: {
     marginTop: 15,
@@ -123,6 +123,7 @@ const style = theme => ({
   },
   gridContainer: {
     width: '97%',
+    maxWidth: 670,
   },
   layout: {
     width: 'auto',
@@ -317,7 +318,7 @@ class DetailContentsViewPage extends Component {
                   </Avatar>
                   <Typography style={{ fontWeight: 600, fontSize: 14, marginLeft: 5, }}>{content.studyLocation}</Typography>
                 </div>
-                <Card style={{ width: '80%', height: '86%', }}>
+                <Card style={{ width: '80%', height: '86%', maxWidth: 350, maxHeight: 327, }}>
                   <div id="naverMap" className={classes.naverMap} />
                 </Card>
               </div>

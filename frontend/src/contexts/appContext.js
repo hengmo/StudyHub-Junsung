@@ -1,7 +1,6 @@
 import React, { Component, createContext } from 'react';
 import apiClient from '../helpers/apiClient';
 import socketIOClient from 'socket.io-client';
-import { Persist } from 'react-persist'
 /* global naver */
 
 const AppContext = createContext();
