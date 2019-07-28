@@ -1,26 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import propTypes from 'prop-types';
-import {
-  withStyles,
-  Button,
-  Typography,
-  Card,
-  CardContent,
-  CardMedia,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Avatar,
-  Grid,
-  Menu,
-  MenuItem,
-  Snackbar,
-} from '@material-ui/core';
+import { withStyles, Button, Typography, Card, CardContent, CardMedia, Avatar, Grid, Menu, MenuItem, Snackbar, } from '@material-ui/core';
 import SendMessageDialog from '../MyMessage/SendMessageDialog';
 import { AppContext } from '../../contexts/appContext';
 import classNames from 'classnames';
-import { Group, Place, Update, Category, } from '@material-ui/icons';
+import { Group, Place, Update, Category } from '@material-ui/icons';
 import { apiUrl } from '../../helpers/apiClient';
 import RequestButton from '../UIElements/RequestButton';
 
@@ -31,7 +15,7 @@ const style = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  mainHeader: {
+  header: {
     width: '100%',
     height: 'auto',
     display: 'flex',
@@ -39,48 +23,38 @@ const style = theme => ({
     alignItems: 'center',
     background: 'white',
   },
-  topContainer: {
+  headerContainer: {
+    width: '72%',
+    height: 'auto',
     margin: '25px 0px',
-    width: '74%',
-    height: '100%',
     display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  simpleInformContainer: {
-    height: '88%',
-    width: '62%',
-    display: 'flex',
-    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
-  informTextContainer: {
-    marginBottom: 22,
+  cardImgContainer: {
+    width: '58%',
   },
-  groupIcon: {
-    width: 100,
-    height: 50,
-    marginBottom: 25,
-    color: '#90CAF9',
+  coverImgCard: {
+    width: '85%',
   },
-  leaderBtnContainer: {
+  informContainer: {
+    width: '40%',
+  },
+  informWrapper: {
+    marginTop: 15,
+  },
+  iconWrapper: {
     display: 'flex',
     alignItems: 'center',
+    marginBottom: 7,
   },
   userRequestContainer: {
     height: '88%',
-    width: '25%',
+    width: '40%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  listItemText: {
-    paddingTop: 5,
-    fontSize: 15,
-    fontWeight: 600,
-    wordBreak: 'keep-all',
   },
   buttonContainer: {
     display: 'flex',
@@ -91,31 +65,64 @@ const style = theme => ({
     width: 150,
     margin: 2,
   },
+  main: {
+    width: '100%',
+    height: 430,
+    display: 'flex',
+    justifyContent: 'center',
+  },
   mainContainer: {
     display: 'flex',
     justifyContent: 'center',
-    height: '100%',
-    width: '74%',
+    width: '72%',
     marginTop: 50,
-    marginBottom: 50,
   },
   detailContainer: {
-    width: '67%',
+    width: '58%',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
   },
   detailContent: {
-    width: '82%',
+    width: '97%',
     marginBottom: 25,
   },
   avatarIcon: {
     backgroundColor: '#90CAF9',
+    width: '1.5vw',
+    height: '3vh',
+  },
+  mapContainer: {
+    width: '40%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   naverMap: {
     width: '100%',
-    height: 318,
-    maxHeight: 350,
+    height: '100%',
+  },
+  bottom: {
+    width: '100%',
+    height: 'auto',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bottomContainer: {
+    width: '72%',
+    height: 'auto',
+    display: 'flex',
+    marginTop: '4vh',
+    marginBottom: '9vh',
+  },
+  participantsWrapper: {
+    width: '58%',
+    height: '100%',
+    marginBottom: '10vh',
+  },
+  gridContainer: {
+    width: '97%',
   },
   layout: {
     width: 'auto',
@@ -153,14 +160,14 @@ class DetailContentsViewPage extends Component {
   };
 
   leaderMenuOpen = (e, email) => {
-    this.setState({ 
+    this.setState({
       anchorEl: e.currentTarget,
       sendMessageTo: email,
     });
   };
 
   participantMenusOpen = (e, email) => {
-    this.setState({ 
+    this.setState({
       anchorParticipantsEle: e.currentTarget,
       sendMessageTo: email,
     });
@@ -168,12 +175,16 @@ class DetailContentsViewPage extends Component {
 
   handleClose = () => {
     console.log('handle Close');
-    this.setState({ ...this.state, sendMessageTo: '', messageSendDialogOpen: false, anchorEl: null, anchorParticipantsEle: null }, () => this.sendMessageDialog.setToInitialState(),);
+    this.setState({ ...this.state, sendMessageTo: '', messageSendDialogOpen: false, anchorEl: null, anchorParticipantsEle: null }, () =>
+      this.sendMessageDialog.setToInitialState(),
+    );
   };
 
   handleOpen = () => {
     const { sendMessageTo } = this.state;
-    const { userInfo: { status: loginStatus }, } = this.props;
+    const {
+      userInfo: { status: loginStatus },
+    } = this.props;
     if (!loginStatus) {
       this.context.actions.snackbarOpenHandler('먼저 로그인 해주세요.', 'warning');
     } else this.setState({ ...this.state, messageSendDialogOpen: true }, this.sendMessageDialog.setToInitialState(sendMessageTo));
@@ -193,9 +204,7 @@ class DetailContentsViewPage extends Component {
 
     if (loginStatus) {
       if (content.leader.email === loginedUserEmail) {
-        return (
-          <RequestButton value="스터디 삭제" buttonLoading={buttonLoading} clickHandler={deleteStudy} />
-        );
+        return <RequestButton value="스터디 삭제" buttonLoading={buttonLoading} clickHandler={deleteStudy} />;
       } else if (participants.map(user => user.email).includes(loginedUserEmail)) {
         return (
           <div style={{ textAlign: 'center' }}>
@@ -241,127 +250,140 @@ class DetailContentsViewPage extends Component {
     return (
       <Fragment>
         <div className={classes.root}>
-          <div className={classes.mainHeader}>
-            <div className={classes.topContainer}>
-              <Group className={classes.groupIcon} />
-              <div className={classes.simpleInformContainer}>
-                <div className={classes.informTextContainer}>
-                  <Typography style={{ marginBottom: 13 }}>{new Date(content.createdAt).toLocaleDateString('ko-KR', options)}</Typography>
-                  <Typography variant="h4" style={{ wordBreak: 'keep-all', }}>
+          <div className={classes.header}>
+            <div className={classes.headerContainer}>
+              <div className={classes.cardImgContainer}>
+                <Card className={classes.coverImgCard}>
+                  <CardMedia 
+                    component="img" 
+                    alt="coverImg" 
+                    style={{ width: '100%', height: '42vh' }} 
+                    src={`${apiUrl}/${content.imageUrl}`}
+                  />
+                </Card>
+              </div>
+              <div className={classes.informContainer}>
+                <div className={classes.titleWrapper}>
+                  <Typography style={{ wordBreak: 'keep-all', fontSize: 36, fontWeight: 600, }}>
                     {content.title}
-                    </Typography>
+                  </Typography>
                 </div>
-                <div className={classes.leaderBtnContainer}>
-                  <Typography style={{ marginRight: 15 }}>주최: {content.leader.name}</Typography>
+                <div className={classes.informWrapper}>
+                  <div className={classes.iconWrapper}>
+                    <Avatar className={classes.avatarIcon}>
+                      <Update style={{ width: 18, }} />
+                    </Avatar>
+                    <Typography style={{ fontWeight: 600, fontSize: 14, marginLeft: 5, }}>{new Date(content.createdAt).toLocaleDateString('ko-KR', options)}</Typography>
+                  </div>
+                  <div className={classes.iconWrapper}>
+                    <Avatar className={classes.avatarIcon}>
+                      <Category style={{ width: 15, }}/>
+                    </Avatar>
+                    <Typography style={{ fontWeight: 600, fontSize: 14, marginLeft: 5, }}>{`${content.categories}`}</Typography>
+                  </div>
+                  <div className={classes.iconWrapper}>
+                    <Avatar className={classes.avatarIcon}>
+                      <Group style={{ width: 15, }}/>
+                    </Avatar>
+                    <Typography style={{ fontWeight: 600, fontSize: 14, marginLeft: 5, }}>현재 {participants.length + 1}명이 참여중</Typography>
+                  </div>
                 </div>
               </div>
-              <div className={classes.userRequestContainer}>{this.userRendering()}</div>
             </div>
           </div>
-          <div className={classes.mainContainer}>
-            <div className={classes.detailContainer}>
-              <Card className={classes.detailContent}>
-                <CardMedia
-                  component="img"
-                  alt="coverImg"
-                  style={{ width: '100%', height: '48vh', }}
-                  src={`${apiUrl}/${content.imageUrl}`}
-                />
-              </Card>
-              <div className={classes.detailContent}>
-                <Typography variant="h5" style={{ marginBottom: 15 }}>
-                  세부 사항
-                </Typography>
-                <Typography style={{ width: '88%', fontSize: 18, marginBottom: 25 }} component="p">
-                  {`${content.description}`.split('\n').map(str => {
-                    return (
-                      <span key={str}>
-                        {str}
-                        <br />
-                      </span>
-                    );
-                  })}
-                </Typography>
-                <Typography variant="h5" style={{ marginBottom: 15 }}>
-                  참석자
-                </Typography>
-                <div className={classNames(classes.layout, classes.cardGrid)}>
-                  <Grid container spacing={16}>
-                    <Grid item sm={6} md={4} lg={3}>
-                      <Card className={classes.card}>
-                        <Button aria-owns={anchorEl ? 'leader-menus' : undefined} aria-haspopup="true" onClick={e => this.leaderMenuOpen(e, content.leader.email)}>
-                          <Avatar style={{ width: 73, height: 73, marginTop: 12 }} src={`${apiUrl}/${content.leader.profileImg}`} />
-                        </Button>
-                        <Menu id="leader-menus" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
-                          <MenuItem onClick={this.handleOpen}>쪽지 보내기</MenuItem>
-                        </Menu>
-                        <CardContent style={{ textAlign: 'center' }}>
-                          <Typography gutterBottom fontWeight="fontWeightMedium">
-                            {content.leader.name}
-                          </Typography>
-                          <Typography style={{ fontSize: 15 }}>스터디장</Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-
-                    {participants.map(user => (
-                      <Grid item key={user.name} sm={6} md={4} lg={3}>
+          <div className={classes.main}>
+            <div className={classes.mainContainer}>
+              <div className={classes.detailContainer}>
+                <div className={classes.detailContent}>
+                  <Typography variant="h5" style={{ marginBottom: 15 }}>
+                    세부 사항
+                  </Typography>
+                  <Typography style={{ width: '88%', fontSize: 18, marginBottom: 25 }} component="p">
+                    {`${content.description}`.split('\n').map(str => {
+                      return (
+                        <span key={str}>
+                          {str}
+                          <br />
+                        </span>
+                      );
+                    })}
+                  </Typography>
+                </div>
+              </div>
+              <div className={classes.mapContainer}>
+                <div className={classes.iconWrapper}>
+                  <Avatar className={classes.avatarIcon}>
+                    <Place style={{ width: 18, }} />
+                  </Avatar>
+                  <Typography style={{ fontWeight: 600, fontSize: 14, marginLeft: 5, }}>{content.studyLocation}</Typography>
+                </div>
+                <Card style={{ width: '80%', height: '86%', }}>
+                  <div id="naverMap" className={classes.naverMap} />
+                </Card>
+              </div>
+            </div>
+          </div>
+          <div className={classes.bottom}>
+            <div className={classes.bottomContainer}>
+              <div className={classes.participantsWrapper}>
+                <Typography variant="h5" style={{ marginBottom: 15 }}>참석자</Typography>
+                <div className={classes.gridContainer}>
+                  <div className={classNames(classes.layout, classes.cardGrid)}>
+                    <Grid container spacing={16}>
+                      <Grid item sm={6} md={4} lg={3}>
                         <Card className={classes.card}>
                           <Button
-                            aria-owns={anchorParticipantsEle ? 'participants-menus' : undefined}
+                            aria-owns={anchorEl ? 'leader-menus' : undefined}
                             aria-haspopup="true"
-                            onClick={e => this.participantMenusOpen(e, user.email)}
+                            onClick={e => this.leaderMenuOpen(e, content.leader.email)}
                           >
-                            <Avatar style={{ width: 73, height: 73, marginTop: 12 }} src={`${apiUrl}/${user.profileImg}`} />
+                            <Avatar style={{ width: 73, height: 73, marginTop: 12 }} src={`${apiUrl}/${content.leader.profileImg}`} />
                           </Button>
-                          <Menu
-                            id="participants-menus"
-                            anchorEl={anchorParticipantsEle}
-                            open={Boolean(anchorParticipantsEle)}
-                            onClose={this.handleClose}
-                          >
+                          <Menu id="leader-menus" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                             <MenuItem onClick={this.handleOpen}>쪽지 보내기</MenuItem>
                           </Menu>
                           <CardContent style={{ textAlign: 'center' }}>
                             <Typography gutterBottom fontWeight="fontWeightMedium">
-                              {user.name}
+                              {content.leader.name}
                             </Typography>
-                            <Typography style={{ fontSize: 15 }}>스터디원</Typography>
+                            <Typography style={{ fontSize: 15 }}>스터디장</Typography>
                           </CardContent>
                         </Card>
                       </Grid>
-                    ))}
-                  </Grid>
+
+                      {participants.map(user => (
+                        <Grid item key={user.name} sm={6} md={4} lg={3}>
+                          <Card className={classes.card}>
+                            <Button
+                              aria-owns={anchorParticipantsEle ? 'participants-menus' : undefined}
+                              aria-haspopup="true"
+                              onClick={e => this.participantMenusOpen(e, user.email)}
+                            >
+                              <Avatar style={{ width: 73, height: 73, marginTop: 12 }} src={`${apiUrl}/${user.profileImg}`} />
+                            </Button>
+                            <Menu
+                              id="participants-menus"
+                              anchorEl={anchorParticipantsEle}
+                              open={Boolean(anchorParticipantsEle)}
+                              onClose={this.handleClose}
+                            >
+                              <MenuItem onClick={this.handleOpen}>쪽지 보내기</MenuItem>
+                            </Menu>
+                            <CardContent style={{ textAlign: 'center' }}>
+                              <Typography gutterBottom fontWeight="fontWeightMedium">
+                                {user.name}
+                              </Typography>
+                              <Typography style={{ fontSize: 15 }}>스터디원</Typography>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </div>
                 </div>
               </div>
+              <div className={classes.userRequestContainer}>{this.userRendering()}</div>
             </div>
-            <Card style={{ width: '29%', height: '80%', maxWidth: 373, }}>
-              <CardContent style={{ padding: 0 }}>
-                <List style={{ minWidth: 180 }}>
-                  <ListItem>
-                    <Avatar className={classes.avatarIcon}>
-                      <Update />
-                    </Avatar>
-                    <ListItemText primary="날짜" secondary={<Typography className={classes.listItemText}>{new Date(content.createdAt).toLocaleDateString('ko-KR', options)}</Typography>} />
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Avatar className={classes.avatarIcon}>
-                      <Place />
-                    </Avatar>
-                    <ListItemText primary="장소" secondary={<Typography className={classes.listItemText}>{content.studyLocation}</Typography>} />
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Avatar className={classes.avatarIcon}>
-                      <Category />
-                    </Avatar>
-                    <ListItemText primary="분류" secondary={<Typography className={classes.listItemText}>{`${content.categories}`}</Typography>} />
-                  </ListItem>
-                </List>
-              </CardContent>
-              <div id="naverMap" className={classes.naverMap} />
-            </Card>
           </div>
         </div>
         <SendMessageDialog
