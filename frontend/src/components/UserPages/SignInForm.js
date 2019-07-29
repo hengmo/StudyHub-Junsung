@@ -126,6 +126,7 @@ class SignInPage extends Component {
       return this.context.actions.snackbarOpenHandler('입력하신 이메일 또는 비밀번호가 잘못 되었습니다.', state);
     }
     this.context.actions.snackbarOpenHandler(message, state);
+    localStorage.setItem('user-info', JSON.stringify({ email: email, loginStatus: true, }));
     this.props.history.push("/");
   }
 

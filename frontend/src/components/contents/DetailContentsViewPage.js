@@ -117,7 +117,7 @@ const style = theme => ({
     marginBottom: '9vh',
   },
   participantsWrapper: {
-    width: '58%',
+    width: '58.5%',
     height: '100%',
     marginBottom: '10vh',
   },

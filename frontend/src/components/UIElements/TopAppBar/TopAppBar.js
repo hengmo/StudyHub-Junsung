@@ -33,17 +33,8 @@ const styles = {
 class TopAppBar extends Component {
   static contextType = AppContext;
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      categories: ['영어', '일본어', '중국어', '회화', '취업준비', '면접', '자기소개서', '프로젝트', '코딩 테스트', '전공', '인적성&NCS'],
-    }
-  }
-
   render() {
-    const { classes, } = this.props;
-    const { status: loginStatus } = this.context.state.userInfo;
+    const { classes, loginStatus } = this.props;
 
     return (
       <div className={classes.root}>

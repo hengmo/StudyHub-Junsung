@@ -40,13 +40,13 @@ class SendMessageDialog extends Component {
 
   sendMessage = async () => {
     const { sendMessageTo, messageTitle, messageBody } = this.state;
-    const { userInfo } = this.context.state;
+    const { email } = JSON.parse(localStorage.getItem('user-info'));
 
     if (sendMessageTo === '' || messageTitle === '' || messageBody === ''){
       this.context.actions.snackbarOpenHandler("공란이 있을 수 없습니다.",'warning');
       return false;
     }
-    else if (sendMessageTo.trim() === userInfo.email){
+    else if (sendMessageTo.trim() === email){
       this.context.actions.snackbarOpenHandler("자기 자신에게 쪽지를 전송할 수 없습니다.",'warning');
       return false;
     }

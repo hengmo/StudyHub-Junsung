@@ -37,7 +37,7 @@ class App extends Component {
       <>
         {this.props.state.loadingStatus ? (
           <div className="App">
-            <TopAppBar />
+            <TopAppBar loginStatus={loginStatus} />
             <CssBaseline />
             <CustomSnackbar />
             <Route exact path="/" component={TemplateController} />

@@ -51,7 +51,7 @@ class ContentsCarousel extends Component {
 
   renderStrWithEllipsis = (str) => {
     let str_temp = str.substring(0, 18)
-    if(str.length >= 18)
+    if(str.length >= 17)
       str_temp = str_temp + "...";
     return str_temp;
   };

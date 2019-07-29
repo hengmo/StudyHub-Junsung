@@ -33,18 +33,9 @@ const styles = theme => ({
 class AvatarandDropdown extends React.Component {
   static contextType = AppContext;
 
-  constructor (props){
-    super(props);
-    
-    this.state = {
-      anchorEl: null,
-    };
-
-    this.getUnseenMessage = this.getUnseenMessage.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
-  }
+  state = {
+    anchorEl: null,
+  };
 
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -62,14 +53,14 @@ class AvatarandDropdown extends React.Component {
     } else if (option === 'signout') {
       apiClient.post('/users/signout')
       .then (()=> {
-        localStorage.setItem("loginState",JSON.stringify(false));
+        localStorage.setItem('user-info',JSON.stringify({ email: "", loginStatus: false, }));
         window.location = '/';
       })
       .catch (err => console.log(err));
     }
   }
 
-  getUnseenMessage(data){
+  getUnseenMessage = data => {
     if (data.recipient === this.context.state.userInfo.id)
       this.context.actions.getUnseenMessage();
   };

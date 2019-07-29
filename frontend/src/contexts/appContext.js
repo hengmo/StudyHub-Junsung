@@ -152,12 +152,7 @@ export default class AppContextProvider extends Component {
             lng: position.coords.longitude,
             loadingStatus: true,
           });
-        },
-        () => {
-          return this.setState({
-            loadingStatus: true,
-          });
-        },
+        }
       );
     },
     getAddressesByLatLng: latlng => {
