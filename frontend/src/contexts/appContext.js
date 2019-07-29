@@ -131,22 +131,7 @@ export default class AppContextProvider extends Component {
         ...obj,
       });
     },
-    signin: (email, password) => apiClient.post('/users/signin', {email, password})
-    .then(res => {
-      this.setState({
-        ...this.state,
-        userInfo: {
-          status: res.status,
-          id: res.id,
-          email: res.email,
-          image: res.image,
-          name: res.name,
-          date: res.date,
-        },
-        snackbarInfo: res.info
-      });
-    })
-    .catch(err => console.log(err)),
+    signin: (email, password) => apiClient.post('/users/signin', {email, password}),
     addContents: formData => apiClient.post('/contents', formData),
     joinStudy: detailTerm => apiClient.put(`/contents/join/${detailTerm}`),
     leaveStudy: detailTerm => apiClient.put(`/contents/leave/${detailTerm}`),
@@ -157,7 +142,7 @@ export default class AppContextProvider extends Component {
     getContentsLatest: () => apiClient.get('/contents/latest'),
     getContentsByCategory: searchTerm => apiClient.get(`/contents/context/${searchTerm}`), //메인 검색창에서 카테고리 검색 시 데이터 보여줌
     getContentsDetail: detailTerm => apiClient.get(`/contents/detail/${detailTerm}`), //상세내용 보여줌
-    sendMessage: (recipientEmail, messageTitle, messageBody, senderId) => apiClient.post('/messages/send', {recipientEmail, messageTitle, messageBody, senderId}),
+    sendMessage: (recipientEmail, messageTitle, messageBody) => apiClient.post('/messages/send', {recipientEmail, messageTitle, messageBody}),
     removeUser: () => apiClient.post('/users/delete'),
     getCurrentPosition: () => {
       navigator.geolocation.getCurrentPosition(

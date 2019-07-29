@@ -126,15 +126,7 @@ router.post('/signin',(req, res, next) => {
       })
     }
     info.url = info.url === null ? redirectURL : info.url;
-    res.send({
-      info,
-      status : true,
-      id : user._id,
-      email : user.email,
-      image: user.image,
-      name: user.name,
-      date: user.date,
-    });
+    res.send(info);
   })(req, res, next)
 })
 

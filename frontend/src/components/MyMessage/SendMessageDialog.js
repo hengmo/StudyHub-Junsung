@@ -54,7 +54,7 @@ class SendMessageDialog extends Component {
     this.setState({
       buttonLoading: true,
     });
-    const res = await this.context.actions.sendMessage(sendMessageTo.trim(), messageTitle, messageBody, userInfo.id);
+    const res = await this.context.actions.sendMessage(sendMessageTo.trim(), messageTitle, messageBody);
     this.context.actions.snackbarOpenHandler(res.message, res.state, { vertical: 'bottom', horizontal: 'left' });
     this.props.handleClose();
     this.setState({

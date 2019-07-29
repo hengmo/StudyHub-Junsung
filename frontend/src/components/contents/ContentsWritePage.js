@@ -114,7 +114,6 @@ class ContentsWritePage extends Component {
   //확인 버튼 클릭시 formData 초기화 후 context addContents에 formData 전달하여 호출
   addContents = async () => {
     const { title, selectedCategories: categories, description, selectedLocation: studyLocation } = this.state;
-    const { name: leader, email, image: profileImg } = this.context.state.userInfo;
     const coverImg = document.getElementById('coverImg').files[0];
 
     if (title === '' || categories === '' || description === '' || studyLocation === '') {
@@ -137,9 +136,6 @@ class ContentsWritePage extends Component {
       description,
       studyLocation,
       coverImg,
-      leader,
-      email,
-      profileImg,
     };
 
     const formData = new FormData();

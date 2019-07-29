@@ -300,9 +300,9 @@ class DetailContentsViewPage extends Component {
                     세부 사항
                   </Typography>
                   <Typography style={{ width: '88%', fontSize: 18, marginBottom: 25 }} component="p">
-                    {`${content.description}`.split('\n').map(str => {
+                    {`${content.description}`.split('\n').map((str, index) => {
                       return (
-                        <span key={str}>
+                        <span key={index}>
                           {str}
                           <br />
                         </span>

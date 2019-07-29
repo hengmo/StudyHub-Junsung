@@ -61,9 +61,9 @@ router.post('/', upload, (req, res, next) => {
     studyLocation: req.body.studyLocation,
     imageUrl: req.file ? req.file.path : basicImgPath,
     leader: {
-      name: req.body.leader,
-      email: req.body.email,
-      profileImg: req.body.profileImg,
+      name: req.user.name,
+      email: req.user.email,
+      profileImg: req.user.image,
     },
   });
   contents.save((err, contents) => {

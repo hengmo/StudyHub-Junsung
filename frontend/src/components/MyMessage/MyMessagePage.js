@@ -33,6 +33,7 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: '70vw',
+    maxWidth: 1076,
     height: 'auto',
     minHeight: '60vh',
     margin: '10vh auto',
