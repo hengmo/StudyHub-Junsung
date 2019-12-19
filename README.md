@@ -1,44 +1,37 @@
-# 개선 부분
+# 스터디 모집 웹 애플리케이션
 
-## 로그인 페이지
-- 로그인 실패시 홈 화면으로 리다이렉트 되는 문제 개선
-- 회원가입 버튼 추가
+![studyhub](https://user-images.githubusercontent.com/35620465/56643541-c6fb1180-66b4-11e9-9e29-e18fb10bdd6a.JPG)
 
-## 메인페이지
-- 스터디 시작하기 버튼 -> 스터디허브 가입하기 버튼으로 수정
-- 카테고리 검색 삭제 -> 카테고리 버튼을 나열
-- 스터디 카드 타이틀 word-break 사용
-- 스터디 카드 클릭 영역 전체로 확대
-- 스터디 카드 타이틀 1줄일 때 카드 height 줄어드는 문제 개선
-- 스터디 리스트 Carousel 구현
-- 스터디 카드 타이틀 ellipsis 구현 -> 카드 height 늘어나는 문제 개선
-- 메인페이지에서 스크롤 하단에 위치했을 경우 스터디 상세 페이지로 이동하면 스크롤 하단에 와있는 문제 개선
+## 사용 기술
 
-## 스터디 작성 페이지
-- 스터디 작성 버튼 클릭시 로딩 구현(스터디 작성 여러번 가능한 문제 개선)
+### 프론트엔드
 
-## 스터디 상세 페이지
-- 스터디 작성 날짜 오류 개선
-- 스터디 참여하기, 탈퇴하기, 삭제하기 버튼 클릭시 로딩 구현
-- 스터디 장소, 분류 word-break 사용
-- 참석자 카드의 아이디 글자수 제한
-- 참석자한테 쪽지 보낼시 받는사람 이메일 오류 개선 
-- 참석자한테 쪽지 보낼시 받는사람 텍스트필드 disabled 구현
-- 쪽지 전송 버튼 클릭시 로딩 구현(쪽지 전송 여러번 가능한 문제 개선)
-- 쪽지 닫기 버튼, X버튼 개선
+- HTML5
+- CSS3
+- Material-UI
+- React.JS(with Context API)
 
-## 쪽지함
-- 쪽지함 이동시 로딩화면 구현
-- 쪽지함 UI 수정(쪽지 작성 버튼, 쪽지 삭제 버튼)
-- 쪽지와 Footer 겹치는 문제 개선
-- 쪽지 페이지 숫자 두줄로 처리되는 문제 개선
-- 쪽지 전송 버튼 클릭시 로딩 구현(쪽지 전송 여러번 가능한 문제 개선)
+### 백엔드
 
-## 이후 개선해야 할 부분
-- 불필요한 checkAuth api 콜 개선
+- Node.JS
+- Express.JS
+- MongoDB(mongoose)
+- Amazon EC2
+- Amazon S3
+- Amazon Route 53
 
-## 금요일 이후 개선한 부분
-- 스터디 상세 페이지 UI 개선
-- 메시지함 max-width 수정
-- signin 수정
-- /send API 수정
+### 개발 툴
+
+- Visual Studio Code
+- MongoDB Compass
+- Postman
+- Putty
+- WinSCP
+
+## 맡은 기능
+
+- [스터디 작성/상세 페이지(Naver Map API 활용, 스터디 참여/탈퇴 기능)](https://github.com/hengmo/StudyHub/tree/master/frontend/src/components/contents)
+- [마이페이지(이메일/닉네임/회원가입일 확인, 스터디 상세보기/탈퇴/삭제 기능)](https://github.com/hengmo/StudyHub/tree/master/frontend/src/components/MyPage)
+- [메인, Carousel 등 UI Component 개발](https://github.com/hengmo/StudyHub/tree/master/frontend/src/components/UIElements)
+- [스터디 생성, 삭제, 참여, 탈퇴, 이미지 업로드 API](https://github.com/hengmo/StudyHub/blob/master/backend/routes/api/contents.js)
+- [axios 비동기 요청 코드 모듈화](https://github.com/hengmo/StudyHub#%EB%8C%80%ED%91%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EC%97%90-%EA%B8%B0%EC%97%AC%ED%95%9C-%EC%BD%94%EB%93%9C)
