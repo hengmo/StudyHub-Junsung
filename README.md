@@ -1,5 +1,7 @@
 # 스터디 모집 웹 애플리케이션
 
+## [StudyHub](https://github.com/hengmo/StudyHub) 팀 프로젝트를 개선시키고 제가 작업한 코드를 모아 둔 레퍼지토리 입니다.
+
 ![studyhub](https://user-images.githubusercontent.com/35620465/56643541-c6fb1180-66b4-11e9-9e29-e18fb10bdd6a.JPG)
 
 ## 사용 기술
@@ -35,4 +37,4 @@
 - [마이페이지(이메일/닉네임/회원가입일 확인, 스터디 상세보기/탈퇴/삭제 기능)](https://github.com/hengmo/StudyHub/tree/master/frontend/src/components/MyPage)
 - [메인, Carousel 등 UI Component 개발](https://github.com/hengmo/StudyHub/tree/master/frontend/src/components/UIElements)
 - [스터디 생성, 삭제, 참여, 탈퇴, 이미지 업로드 API](https://github.com/hengmo/StudyHub/blob/master/backend/routes/api/contents.js)
-- [axios 비동기 요청 코드 모듈화](https://github.com/hengmo/StudyHub#%EB%8C%80%ED%91%9C%EC%A0%81%EC%9C%BC%EB%A1%9C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EC%97%90-%EA%B8%B0%EC%97%AC%ED%95%9C-%EC%BD%94%EB%93%9C)
+- [axios 비동기 요청 코드 모듈화](https://github.com/hengmo/StudyHub/blob/master/frontend/src/helpers/apiClient.js)
