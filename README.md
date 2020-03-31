@@ -9,7 +9,7 @@
 - HTML5
 - CSS3
 - Material-UI
-- React.JS(with Context API)
+- React(with Context API)
 
 ### 백엔드
 
@@ -30,6 +30,7 @@
 
 ## 맡은 기능
 
+- 메인 페이지
 - [스터디 작성/상세 페이지(Naver Map API 활용, 스터디 참여/탈퇴 기능)](https://github.com/hengmo/StudyHub/tree/master/frontend/src/components/contents)
 - [마이페이지(이메일/닉네임/회원가입일 확인, 스터디 상세보기/탈퇴/삭제 기능)](https://github.com/hengmo/StudyHub/tree/master/frontend/src/components/MyPage)
 - [메인, Carousel 등 UI Component 개발](https://github.com/hengmo/StudyHub/tree/master/frontend/src/components/UIElements)
